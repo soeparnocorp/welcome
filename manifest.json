@@ -3,13 +3,17 @@
   "short_name": "READTalk",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#ff0000",
   "theme_color": "#000000",
-  "description": "READTalk Messenger",
   "icons": [
     {
       "src": "/vite.svg",
       "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "512x512",
       "type": "image/svg+xml"
     }
   ]
