@@ -16,17 +16,17 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>READTalk App</h1>
+      <h3>Welcome to READTalk</h3>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          Agree and Count {count}
         </button>
         <p>
           Read <code>Privacy Policy</code> and <code>Terms of Service</code>
         </p>
       </div>
       <p className="read-the-docs">
-        SOEPARNO ENTERPRISE Corp.
+        SOEPARNO Technology
       </p>
     </>
   )
