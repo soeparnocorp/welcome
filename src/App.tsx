@@ -16,13 +16,13 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h3>Welcome to READTalk</h3>
+      <h1>Welcome to READTalk</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           Agree and Count {count}
         </button>
         <p>
-          Read <code>Privacy Policy</code> and <code>Terms of Service</code>
+          Read our <code>Privacy Policies</code> Tap Aggree and Continue. <code>Terms of Service</code>
         </p>
       </div>
       <p className="read-the-docs">
