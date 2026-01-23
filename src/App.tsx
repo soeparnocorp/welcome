@@ -19,10 +19,10 @@ function App() {
       <h1>Welcome to READTalk</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          Agree and Count {count}
+          Agree and Countinue {count}
         </button>
         <p>
-          Read our <code>Privacy Policies</code> Tap Aggree and Continue. <code>Terms of Service</code>
+          Read our <code>Privacy Policies</code> Tap "Aggree and continue" to accept our <code>Terms of Service</code>
         </p>
       </div>
       <p className="read-the-docs">
