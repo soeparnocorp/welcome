@@ -1,0 +1,5 @@
+[[bindings]]
+type = "service_worker"
+name = "OPENAUTH_WORKER"
+service = "openauth"   # nama Worker OpenAuth
+environment = "production"
