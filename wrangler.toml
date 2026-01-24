@@ -1,5 +1,15 @@
+name = "readtalk-pages"
+type = "typescript"
+compatibility_date = "2026-01-24"
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+
+[build]
+command = "npm run build"
+upload.format = "service-worker"
+upload.dir = "dist"                
+
 [[bindings]]
 type = "service_worker"
-name = "OPENAUTH_WORKER"
-service = "openauth"   # nama Worker OpenAuth
-environment = "production"
+name = "OPENAUTH_WORKER"           
+service = "openauth"               
+environment = "production"         
