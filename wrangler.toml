@@ -11,5 +11,5 @@ upload.dir = "dist"
 [[bindings]]
 type = "service_worker"
 name = "OPENAUTH_WORKER"           
-service = "openauth"               
+service = "readtalk"               
 environment = "production"         
