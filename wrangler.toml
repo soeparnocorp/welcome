@@ -1,7 +1,7 @@
 name = "readtalk-pages"
 type = "typescript"
 compatibility_date = "2026-01-24"
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+account_id = "53d61c09062b1ca11788fa763f79313a"
 
 [build]
 command = "npm run build"
