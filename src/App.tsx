@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   const handleClick = () => {
     // arah ke Pages Function /click
-    window.location.href = '/'
+    window.location.href = '/log/'
   }
 
   return (
