@@ -12,4 +12,10 @@ upload.dir = "dist"
 type = "service_worker"
 name = "OPENAUTH_WORKER"           
 service = "openauth"               
-environment = "production"         
+environment = "production"
+
+[[bindings]]
+type = "service_worker"
+name = "READTALK_WORKER"           
+service = "room"               
+environment = "production"
