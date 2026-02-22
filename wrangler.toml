@@ -17,5 +17,5 @@ environment = "production"
 [[bindings]]
 type = "service_worker"
 name = "READTALK_WORKER"           
-service = "room"               
+service = "account"               
 environment = "production"
