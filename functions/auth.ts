@@ -1,32 +1,26 @@
-export async function onRequestGet({ env, request }) {
+interface Env {
+  OPENAUTH_WORKER: Fetcher;
+}
+
+export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
 
   if (code) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        'Location': `https://app-readtalk.pages.dev/`
-      }
-    });
+    return Response.redirect(`https://app-readtalk.pages.dev/?code=${code}`, 302);
   }
 
-  const response = await env.OPENAUTH_WORKER.fetch(
-    new Request("https://internal-placeholder")
-  );
-
+  const response = await env.OPENAUTH_WORKER.fetch('https://internal/');
   return response;
-}
+};
 
-export async function onRequestPost({ request, env }) {
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const { email, code } = await request.json();
-
-  const response = await env.OPENAUTH_WORKER.fetch(
-    "https://internal/verify", {
-      method: 'POST',
-      body: JSON.stringify({ email, code })
-    }
-  );
-
+  
+  const response = await env.OPENAUTH_WORKER.fetch('https://internal/verify', {
+    method: 'POST',
+    body: JSON.stringify({ email, code })
+  });
+  
   return response;
-}
+};
