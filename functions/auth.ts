@@ -6,7 +6,7 @@ export async function onRequestGet({ env, request }) {
     return new Response(null, {
       status: 302,
       headers: {
-        'Location': `/?code=${code}`
+        'Location': `https://app-readtalk.pages.dev/?code=${code}`
       }
     });
   }
