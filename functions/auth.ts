@@ -13,7 +13,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // fetch langsung route Worker yang ada (/authorize)
-  const response = await env.OPENAUTH_WORKER.fetch('/authorize');
+  const response = await env.OPENAUTH_WORKER.fetch('/password/authorize');
   return response;
 };
 
