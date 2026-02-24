@@ -13,9 +13,9 @@ function App() {
 
     if (!token) {
       // Redirect ke OpenAuth login
-      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/login";
+      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
       const redirectUri = encodeURIComponent(
-        "https://id-readtalk.pages.dev/account"
+        "https://app-readtalk.pages.dev/account"
       );
       window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
     } else {
