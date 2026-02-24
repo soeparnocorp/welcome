@@ -9,19 +9,41 @@ function App() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const code = queryParams.get("code");
     const token = localStorage.getItem("readtalk_token");
 
-    if (!token) {
-      // Redirect ke OpenAuth login
-      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
-      const redirectUri = encodeURIComponent(
-        "https://id-readtalk.pages.dev/"
-      );
-      window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
-    } else {
-      // User sudah login
-      setIsCheckingAuth(false);
+    const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
+    const redirectUri = encodeURIComponent("https://id-readtalk.pages.dev/");
+
+    async function handleAuth() {
+      if (code) {
+        try {
+          // Tukar code dengan token dari OpenAuth Worker
+          const res = await fetch(
+            `https://openauth.soeparnocorp.workers.dev/token?code=${encodeURIComponent(code)}&redirect_uri=${redirectUri}`
+          );
+          const data = await res.json();
+          if (data.token) {
+            localStorage.setItem("readtalk_token", data.token);
+            // Bersihkan query params dari URL
+            window.history.replaceState({}, "", redirectUri);
+          }
+        } catch (err) {
+          console.error("Failed to exchange code for token:", err);
+        }
+      }
+
+      const finalToken = localStorage.getItem("readtalk_token");
+      if (!finalToken) {
+        // Redirect ke OpenAuth login jika belum login
+        window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
+      } else {
+        setIsCheckingAuth(false);
+      }
     }
+
+    handleAuth();
   }, []);
 
   if (isCheckingAuth) {
