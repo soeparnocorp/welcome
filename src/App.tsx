@@ -14,15 +14,15 @@ function App() {
       </div>
       <h1>Welcome to READTalk</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          Agree and Countinue {count}
-        </button>
         <p>
           Read our <code>Privacy Policies</code> Tap "Aggree and continue" to accept our <code>Terms of Service</code>
         </p>
+        <button onClick={() => setCount((count) => count + 1)}>
+          Agree and Countinue {count}
+        </button>
       </div>
       <p className="read-the-docs">
-        SOEPARNO Technology
+        © 2026  SOEPARNO ENTERPRISE Corp.
       </p>
     </>
   )
