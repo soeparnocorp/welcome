@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://readtalk.pages.dev" target="_blank">
+        <a href="https://id-readtalk.pages.dev" target="_blank">
           <img src={viteLogo} className="logo spin" alt="Vite logo" />
         </a>
       </div>
