@@ -1,29 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("readtalk_token");
+    if (!token) {
+      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
+      const redirectUri = encodeURIComponent("https://id-readtalk.pages.dev/");
+      window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
+    } else {
+      setIsCheckingAuth(false);
+    }
+  }, []);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="loading-screen">
+        <img src={viteLogo} className="logo" alt="Logo" />
+        <div className="logo-motion"></div>
+        <p>Checking authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <div id="root">
-      {/* Logo center dengan animasi floating ala WA */}
-      <div className="logo-container">
-        <img src={viteLogo} className="logo" alt="READTalk Logo" />
-      </div>
-
-      <h1 className="welcome-text">Welcome to READTalk</h1>
-
+      <img src={viteLogo} className="logo" alt="Logo" />
+      <div className="logo-motion"></div>
+      <h1>Welcome to READTalk</h1>
       <div className="card">
-        <button onClick={() => setCount((c) => c + 1)} className="agree-btn">
-          Agree and Continue {count}
+        <button onClick={() => localStorage.setItem("readtalk_token", "1")}>
+          Agree and Continue
         </button>
-        <p className="tos-text">
-          Read our <code>Privacy Policies</code>. Tap "Agree and Continue" to accept our <code>Terms of Service</code>.
-        </p>
       </div>
-
-      <p className="footer-text">SOEPARNO Technology</p>
     </div>
   );
 }
