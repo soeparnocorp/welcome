@@ -5,80 +5,41 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [checking, setChecking] = useState(true)
 
+  // CEK COOKIE SAAT PERTAMA BUKA
   useEffect(() => {
-    // CEK: Apakah user baru logout dari main app?
-    const justLoggedOut = sessionStorage.getItem('justLoggedOut')
-    if (justLoggedOut) {
-      sessionStorage.removeItem('justLoggedOut')
-      // Tampilkan pesan atau tidak perlu
-    }
+    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=')
+      acc[key] = value
+      return acc
+    }, {})
 
-    // CEK: Apakah masih punya session?
-    const session = localStorage.getItem('readtalk_session')
-    if (session) {
-      const sessionData = JSON.parse(session)
-      const sessionAge = Date.now() - new Date(sessionData.agreedAt).getTime()
-      
-      // Jika session masih fresh (< 24 jam), langsung redirect ke main app
-      if (sessionAge < 24 * 60 * 60 * 1000) {
-        setIsRedirecting(true)
-        setTimeout(() => {
-          window.location.href = 'https://public.soeparnocorp.workers.dev/'
-        }, 500) // Delay kecil biar smooth
-      }
+    // Jika sudah pernah agree, langsung redirect
+    if (cookies.readtalk_user === 'agreed') {
+      window.location.href = 'https://public.soeparnocorp.workers.dev/'
+    } else {
+      setChecking(false) // Tampilkan tombol agree
     }
   }, [])
 
   const handleAgree = () => {
     setCount((count) => count + 1)
-    setIsRedirecting(true)
     
-    // Buat session baru
-    const session = {
-      userId: 'user_' + Date.now(),
-      agreedAt: new Date().toISOString(),
-      deviceInfo: navigator.userAgent
-    }
+    // SET COOKIE - 10 tahun
+    const farFuture = new Date()
+    farFuture.setFullYear(farFuture.getFullYear() + 10)
     
-    localStorage.setItem('readtalk_session', JSON.stringify(session))
+    document.cookie = `readtalk_user=agreed; expires=${farFuture.toUTCString()}; path=/;`
+    document.cookie = `user_id=user_${Date.now()}; expires=${farFuture.toUTCString()}; path=/;`
+    document.cookie = `agreed_at=${new Date().toISOString()}; expires=${farFuture.toUTCString()}; path=/;`
     
     // Redirect ke main app
-    setTimeout(() => {
-      window.location.href = 'https://public.soeparnocorp.workers.dev/'
-    }, 300)
+    window.location.href = 'https://public.soeparnocorp.workers.dev/'
   }
 
-  if (isRedirecting) {
-    return (
-      <div className="redirecting">
-        <div className="spinner"></div>
-        <p>Memasuki aplikasi...</p>
-        <style>{`
-          .redirecting {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-          }
-          .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #ff0000;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-          }
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
-      </div>
-    )
+  if (checking) {
+    return <div style={{ padding: '20px' }}>Memeriksa status...</div>
   }
 
   return (
