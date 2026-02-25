@@ -3,6 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100vh;
 }
 
 .logo {
@@ -10,14 +14,15 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+  display: none; /* Hide logo as per WhatsApp style */
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #ff0000aa);
 }
 
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #ff0000aa);
 }
 
 @keyframes logo-spin {
@@ -36,9 +41,91 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .read-the-docs {
   color: #888;
+  font-size: 12px;
+  margin-top: 24px;
+}
+
+/* Custom styles for READTalk */
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #000;
+}
+
+.terms-text {
+  color: #666;
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.terms-text a {
+  color: #ff0000;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms-text a:hover {
+  text-decoration: underline;
+}
+
+.language-selector {
+  margin-bottom: 20px;
+}
+
+.language-selector span {
+  color: #ff0000;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-block;
+  padding: 8px 0;
+}
+
+.language-selector span:hover {
+  opacity: 0.8;
+}
+
+.agree-button {
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 24px;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+}
+
+.agree-button:hover {
+  background-color: #d40000;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
+}
+
+.footer {
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 16px;
 }
