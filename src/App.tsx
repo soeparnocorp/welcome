@@ -3,39 +3,38 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("readtalk_token");
     if (!token) {
-      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
-      const redirectUri = encodeURIComponent("https://id-readtalk.pages.dev/");
-      window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
+      setAgreed(false);
     } else {
-      setIsCheckingAuth(false);
+      setAgreed(true);
     }
   }, []);
 
-  if (isCheckingAuth) {
+  const handleAgree = () => {
+    localStorage.setItem("readtalk_token", "agreed");
+    setAgreed(true);
+  };
+
+  if (!agreed) {
     return (
-      <div className="loading-screen">
+      <div className="welcome-screen">
         <img src={viteLogo} className="logo" alt="Logo" />
-        <div className="logo-motion"></div>
-        <p>Checking authentication...</p>
+        <h1>Welcome to READTalk</h1>
+        <div className="card">
+          <button onClick={handleAgree}>Agree and Continue</button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div id="root">
-      <img src={viteLogo} className="logo" alt="Logo" />
-      <div className="logo-motion"></div>
-      <h1>Welcome to READTalk</h1>
-      <div className="card">
-        <button onClick={() => localStorage.setItem("readtalk_token", "1")}>
-          Agree and Continue
-        </button>
-      </div>
+    <div className="app-screen">
+      <h1>READTalk Home</h1>
+      <p>Your PWA content goes here.</p>
     </div>
   );
 }
