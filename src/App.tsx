@@ -23,8 +23,8 @@ function App() {
         <h1>Welcome to READTalk</h1>
         
         <p className="terms-text">
-          Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" 
-          to accept our <a href="#">Terms of Service</a>.
+          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
+          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
         </p>
 
         <div className="language-selector">
