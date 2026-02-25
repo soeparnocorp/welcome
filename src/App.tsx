@@ -1,3 +1,4 @@
+// src/App.tsx - id-readtalk
 import { useState, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -6,19 +7,26 @@ function App() {
   const [count, setCount] = useState(0)
   const [isRedirecting, setIsRedirecting] = useState(false)
 
-  // Cek session saat halaman dimuat (seperti WhatsApp)
   useEffect(() => {
+    // CEK: Apakah user baru logout dari main app?
+    const justLoggedOut = sessionStorage.getItem('justLoggedOut')
+    if (justLoggedOut) {
+      sessionStorage.removeItem('justLoggedOut')
+      // Tampilkan pesan atau tidak perlu
+    }
+
+    // CEK: Apakah masih punya session?
     const session = localStorage.getItem('readtalk_session')
     if (session) {
       const sessionData = JSON.parse(session)
-      // Cek apakah session masih valid (24 jam)
       const sessionAge = Date.now() - new Date(sessionData.agreedAt).getTime()
+      
+      // Jika session masih fresh (< 24 jam), langsung redirect ke main app
       if (sessionAge < 24 * 60 * 60 * 1000) {
-        console.log('Session masih valid, redirecting...')
         setIsRedirecting(true)
         setTimeout(() => {
           window.location.href = 'https://public.soeparnocorp.workers.dev/'
-        }, 1500)
+        }, 500) // Delay kecil biar smooth
       }
     }
   }, [])
@@ -27,29 +35,26 @@ function App() {
     setCount((count) => count + 1)
     setIsRedirecting(true)
     
-    // Buat session untuk user
+    // Buat session baru
     const session = {
-      userId: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+      userId: 'user_' + Date.now(),
       agreedAt: new Date().toISOString(),
-      deviceInfo: navigator.userAgent,
-      sessionToken: btoa(Date.now() + Math.random().toString(36))
+      deviceInfo: navigator.userAgent
     }
     
-    // Simpan session di localStorage
     localStorage.setItem('readtalk_session', JSON.stringify(session))
     
-    // Redirect ke aplikasi utama
+    // Redirect ke main app
     setTimeout(() => {
       window.location.href = 'https://public.soeparnocorp.workers.dev/'
-    }, 500)
+    }, 300)
   }
 
-  // Tampilan loading saat redirect
   if (isRedirecting) {
     return (
       <div className="redirecting">
         <div className="spinner"></div>
-        <p>Mengalihkan ke aplikasi...</p>
+        <p>Memasuki aplikasi...</p>
         <style>{`
           .redirecting {
             display: flex;
@@ -57,7 +62,6 @@ function App() {
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           }
           .spinner {
             border: 4px solid #f3f3f3;
