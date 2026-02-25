@@ -8,14 +8,15 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://id-readtalk.pages.dev" target="_blank">
+        <a href="#" target="_blank">
           <img src={viteLogo} className="logo spin" alt="Vite logo" />
         </a>
       </div>
       <h1>Welcome to READTalk</h1>
       <div className="card">
         <p>
-          Read our <code>Privacy Policies</code> Tap "Aggree and continue" to accept our <code>Terms of Service</code>
+          Read our <code>Privacy Policies</code> Tap "Aggree and 
+          continue" to accept our <code>Terms of Service</code>
         </p>
         <button onClick={() => setCount((count) => count + 1)}>
           Agree and Countinue {count}
