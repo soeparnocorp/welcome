@@ -5,7 +5,6 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   min-height: 100vh;
 }
 
@@ -14,7 +13,7 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-  display: none; /* Hide logo as per WhatsApp style */
+  /* display: none; -> DIHAPUS */
 }
 
 .logo:hover {
@@ -41,30 +40,30 @@
 }
 
 .card {
-  padding: 0;
-  border: none;
+  padding: 2em;
   background: transparent;
+  border: none;
 }
 
 .read-the-docs {
   color: #888;
-  font-size: 12px;
-  margin-top: 24px;
+  margin-top: 2rem;
 }
 
-/* Custom styles for READTalk */
+/* Custom styles for READTalk - tetap di tengah */
 .content-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  width: 100%;
 }
 
 h1 {
   font-size: 28px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin: 1rem 0 0.5rem;
   color: #000;
 }
 
@@ -72,7 +71,7 @@ h1 {
   color: #666;
   font-size: 15px;
   line-height: 1.4;
-  margin-bottom: 24px;
+  margin: 1rem 0;
 }
 
 .terms-text a {
@@ -86,7 +85,7 @@ h1 {
 }
 
 .language-selector {
-  margin-bottom: 20px;
+  margin: 1rem 0;
 }
 
 .language-selector span {
@@ -95,11 +94,13 @@ h1 {
   font-weight: 500;
   cursor: pointer;
   display: inline-block;
-  padding: 8px 0;
+  padding: 8px 16px;
+  border: 1px solid #ff000020;
+  border-radius: 20px;
 }
 
 .language-selector span:hover {
-  opacity: 0.8;
+  background-color: #ff000010;
 }
 
 .agree-button {
@@ -107,19 +108,20 @@ h1 {
   color: white;
   border: none;
   border-radius: 24px;
-  padding: 14px 32px;
+  padding: 12px 32px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
-  margin-bottom: 24px;
-  transition: background-color 0.2s;
+  max-width: 300px;
+  margin: 1rem auto;
+  transition: all 0.2s;
   box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
 }
 
 .agree-button:hover {
   background-color: #d40000;
-  border: none;
+  transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
 }
 
@@ -127,5 +129,6 @@ h1 {
   text-align: center;
   color: #999;
   font-size: 12px;
-  margin-bottom: 16px;
+  margin-top: auto;
+  padding-top: 2rem;
 }
