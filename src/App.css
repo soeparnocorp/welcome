@@ -3,9 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 .logo {
@@ -13,13 +10,10 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-  /* display: none; -> DIHAPUS */
 }
-
 .logo:hover {
   filter: drop-shadow(0 0 2em #ff0000aa);
 }
-
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #ff0000aa);
 }
@@ -34,30 +28,27 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(1) .logo {
+  a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
 .card {
   padding: 2em;
-  background: transparent;
-  border: none;
 }
 
 .read-the-docs {
   color: #888;
-  margin-top: 2rem;
 }
 
-/* Custom styles for READTalk - tetap di tengah */
+/* ===== CUSTOM STYLES UNTUK READTALK (TAMBAHAN) ===== */
 .content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  width: 100%;
 }
 
 h1 {
@@ -121,14 +112,13 @@ h1 {
 
 .agree-button:hover {
   background-color: #d40000;
+  border-color: transparent;
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
 }
 
 .footer {
   text-align: center;
   color: #999;
   font-size: 12px;
-  margin-top: auto;
-  padding-top: 2rem;
+  margin-top: 2rem;
 }
