@@ -1,0 +1,72 @@
+#root {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.logo-container {
+  display: inline-block;
+  animation: float 3s ease-in-out infinite alternate;
+}
+
+.logo {
+  height: 8em;
+  will-change: transform, filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #00a884aa);
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(-2deg); }
+  75% { transform: translateY(-5px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.welcome-text {
+  margin-top: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #075e54;
+}
+
+.card {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: #e5ddd5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.agree-btn {
+  background-color: #25d366;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.agree-btn:hover {
+  background-color: #20b858;
+}
+
+.tos-text {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.footer-text {
+  margin-top: 3rem;
+  color: #888;
+  font-size: 0.8rem;
+}
