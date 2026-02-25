@@ -1,40 +1,54 @@
+// App.tsx
 import { useEffect, useState } from "react";
 import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
-  const [agreed, setAgreed] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [showAgree, setShowAgree] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("readtalk_token");
+
     if (!token) {
-      setAgreed(false);
+      setShowAgree(true);
+      setIsCheckingAuth(false);
     } else {
-      setAgreed(true);
+      setIsCheckingAuth(false);
     }
   }, []);
 
   const handleAgree = () => {
-    localStorage.setItem("readtalk_token", "agreed");
-    setAgreed(true);
+    const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize";
+    const redirectUri = encodeURIComponent("https://id-readtalk.pages.dev/");
+    window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`;
   };
 
-  if (!agreed) {
+  if (isCheckingAuth) {
     return (
-      <div className="welcome-screen">
-        <img src={viteLogo} className="logo" alt="Logo" />
-        <h1>Welcome to READTalk</h1>
-        <div className="card">
-          <button onClick={handleAgree}>Agree and Continue</button>
-        </div>
+      <div className="loading-screen">
+        <p>Checking authentication...</p>
       </div>
     );
   }
 
   return (
-    <div className="app-screen">
-      <h1>READTalk Home</h1>
-      <p>Your PWA content goes here.</p>
+    <div className="container">
+      <div className="logo-wrapper">
+        <img src={viteLogo} className="logo spin" alt="Vite logo" />
+      </div>
+      <h1 className="title">Welcome to READTalk</h1>
+      {showAgree && (
+        <div className="card">
+          <button className="agree-btn" onClick={handleAgree}>
+            Agree and Continue
+          </button>
+          <p className="agreement-text">
+            Read our <code>Privacy Policies</code>. Tap "Agree and Continue" to accept our <code>Terms of Service</code>.
+          </p>
+        </div>
+      )}
+      <p className="footer">SOEPARNO Technology</p>
     </div>
   );
 }
