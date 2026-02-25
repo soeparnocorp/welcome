@@ -1,21 +1,23 @@
-import { useState, useEffect } from 'react'  
-import viteLogo from '/vite.svg'  
-import './App.css'  
+import { useState, useEffect } from 'react'
+import viteLogo from '/vite.svg'
+import './App.css'
 
 function App() {
   const [showAgree, setShowAgree] = useState(true)
 
   useEffect(() => {
-    // Tangani callback OpenAuth
     const params = new URLSearchParams(window.location.search)
     const code = params.get('code')
-    if (code) {
+    const state = params.get('state')
+
+    if (code && state) {
+      // simpan token di localStorage
       localStorage.setItem('readtalk_token', code)
+      localStorage.setItem('readtalk_state', state)
       setShowAgree(false)
-      // Bersihkan URL callback
+      // bersihkan URL
       window.history.replaceState({}, document.title, window.location.pathname)
     } else {
-      // Tombol tetap muncul sampai user klik dan login
       const token = localStorage.getItem('readtalk_token')
       if (token) setShowAgree(false)
     }
@@ -24,9 +26,13 @@ function App() {
   const handleAgree = () => {
     const token = localStorage.getItem('readtalk_token')
     if (!token) {
-      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/password/authorize"
+      // buat state unik
+      const state = crypto.randomUUID()
+      localStorage.setItem('readtalk_state_temp', state)
+
+      const openAuthUrl = "https://openauth.soeparnocorp.workers.dev/authorize"
       const redirectUri = encodeURIComponent("https://id-readtalk.pages.dev/")
-      window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}`
+      window.location.href = `${openAuthUrl}?redirect_uri=${redirectUri}&state=${state}`
     }
   }
 
