@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import viteLogo from '/vite.svg' // Hanya 1 logo
+import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <div>
-        <a href="/" target="_blank">
+        <a href="#" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
       </div>
