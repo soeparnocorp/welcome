@@ -1,30 +1,20 @@
 import { useState } from 'react'
-import viteLogo from '/vite.svg'
+import viteLogo from '/vite.svg' // Hanya 1 logo
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
-  // Fungsi untuk navigasi / pages functions
   const handleAgree = () => {
     setCount((count) => count + 1)
-    
-    // Contoh fungsi untuk navigasi ke halaman berikutnya
-    console.log('User agreed! Count:', count + 1)
-    
-    // Bisa ditambahkan:
-    // - Navigasi ke halaman lain (react-router)
-    // - Set cookies/localStorage
-    // - Panggil API
-    // - Dll
-    
-    alert(`Agreed! Button clicked ${count + 1} times`)
+    console.log('Agreed! Count:', count + 1)
+    // Fungsi navigasi / pages functions di sini
   }
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
+        <a href="/" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
       </div>
@@ -48,7 +38,7 @@ function App() {
           Agree and continue {count > 0 ? `(${count})` : ''}
         </button>
 
-        <p className="footer">
+        <p className="read-the-docs">
           © 2026 SOEPARNO ENTERPRISE Corp.
         </p>
       </div>
