@@ -3,7 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .logo {
@@ -15,6 +14,9 @@
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
 
 @keyframes logo-spin {
   from {
@@ -25,34 +27,16 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) .logo {
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(1) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
 .card {
   padding: 2em;
-  font-weight: 400; /* normal text */
-}
-
-.card button {
-  font-weight: 600; /* tebal sesuai WA */
-  text-transform: uppercase;
-  background-color: #ff0000;
-  color: #fff;
-  border: none;
-  padding: 0.8em 1.5em;
-  cursor: pointer;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.card button:hover {
-  opacity: 0.9;
 }
 
 .read-the-docs {
   color: #888;
-  font-weight: 300; /* tipis */
-  font-size: 0.9rem;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
