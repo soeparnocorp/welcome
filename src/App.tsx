@@ -1,45 +1,14 @@
-// src/App.tsx - id-readtalk
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [checking, setChecking] = useState(true)
-
-  // CEK COOKIE SAAT PERTAMA BUKA
-  useEffect(() => {
-    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=')
-      acc[key] = value
-      return acc
-    }, {})
-
-    // Jika sudah pernah agree, langsung redirect
-    if (cookies.readtalk_user === 'agreed') {
-      window.location.href = 'https://public.soeparnocorp.workers.dev/'
-    } else {
-      setChecking(false) // Tampilkan tombol agree
-    }
-  }, [])
 
   const handleAgree = () => {
     setCount((count) => count + 1)
-    
-    // SET COOKIE - 10 tahun
-    const farFuture = new Date()
-    farFuture.setFullYear(farFuture.getFullYear() + 10)
-    
-    document.cookie = `readtalk_user=agreed; expires=${farFuture.toUTCString()}; path=/;`
-    document.cookie = `user_id=user_${Date.now()}; expires=${farFuture.toUTCString()}; path=/;`
-    document.cookie = `agreed_at=${new Date().toISOString()}; expires=${farFuture.toUTCString()}; path=/;`
-    
-    // Redirect ke main app
-    window.location.href = 'https://public.soeparnocorp.workers.dev/'
-  }
-
-  if (checking) {
-    return <div style={{ padding: '20px' }}>Memeriksa status...</div>
+    console.log('Agreed! Count:', count + 1)
+    // Fungsi navigasi / pages functions di sini
   }
 
   return (
