@@ -1,52 +1,14 @@
 :root {
-  font-family: 'Courier New', monospace;
-  color-scheme: dark;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background: #0a0a0f;
-  color: #fff;
+  margin: 0;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #0a0a0f;
 }
 
 #root {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-}
-
-/* Reality-bending scrollbar */
-::-webkit-scrollbar {
-  width: 12px;
-  background: #0a0a0f;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, #ff00ff, #00ffff);
-}
-
-::-webkit-scrollbar-thumb {
-  background: #fff;
-  border-radius: 6px;
-  border: 2px solid #0a0a0f;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ff00ff;
-}
-
-/* Glitch effect on selection */
-::selection {
-  background: #ff00ff;
-  color: #000;
-  text-shadow: 2px 2px 0 #00ffff;
 }
