@@ -1,25 +1,30 @@
-// App.tsx
+import { useState } from 'react'
+import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   const handleAgree = () => {
-    // Redirect ke URL yang ditentukan
-    window.location.href = 'https://account.soeparnocorp.workers.dev/'
+    setCount((count) => count + 1)
+    console.log('Agreed! Count:', count + 1)
+    // Fungsi navigasi / pages functions di sini
   }
 
   return (
     <>
       <div>
-        <a href="#" onClick={(e) => e.preventDefault()}>
-          <img src="/vite.svg" className="logo coin-flip" alt="Vite logo" />
+        <a href="#" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
       </div>
       
       <div className="content-wrapper">
-        <h1>Welcome to WhatsApp</h1>
+        <h1>Welcome to READTalk</h1>
         
         <p className="terms-text">
-          Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" to accept our Terms of Service.
+          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
+          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
         </p>
 
         <div className="language-selector">
@@ -30,10 +35,12 @@ function App() {
           className="agree-button"
           onClick={handleAgree}
         >
-          Agree and continue
+          Agree and continue {count > 0 ? `(${count})` : ''}
         </button>
 
-        {/* Footer dihapus sesuai permintaan */}
+        <p className="read-the-docs">
+          © 2026 SOEPARNO ENTERPRISE Corp.
+        </p>
       </div>
     </>
   )
