@@ -37,8 +37,13 @@ function App() {
           className="agree-button"
           onClick={handleAgree}
         >
-          Agree and continue {count > 0 ? `(${count})` : ''}
+          Agree and continue {/* State count dihapus dari tampilan */}
         </button>
+
+        {/* FOOTER TETAP ADA - bagian dari struktur framework */}
+        <p className="read-the-docs">
+          © 2026 SOEPARNO ENTERPRISE Corp.
+        </p>
       </div>
     </>
   )
