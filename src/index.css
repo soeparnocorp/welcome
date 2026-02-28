@@ -61,5 +61,3 @@ button:focus,
 button:focus-visible {
   outline: 4px auto #ff0000;
 }
-
-/* Hapus semua preferensi dark mode karena kita hanya pakai light theme seperti screenshot */
