@@ -1,68 +1,40 @@
-import { useState } from 'react'
+// App.tsx
+import { useState, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [isFlipping, setIsFlipping] = useState(false)
-  const [coinResult, setCoinResult] = useState<'heads' | 'tails' | null>(null)
+  const [count] = useState(0) // state count dihapus fungsinya, cuma display
+
+  // Cek device ID di localStorage
+  useEffect(() => {
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+      deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+      localStorage.setItem('device_id', deviceId);
+    }
+    console.log('Device ID:', deviceId);
+  }, []);
 
   const handleAgree = () => {
-    setCount((count) => count + 1)
-    console.log('Agreed! Count:', count + 1)
-    // Fungsi navigasi / pages functions di sini
-  }
-
-  const flipCoin = () => {
-    if (isFlipping) return
-    
-    setIsFlipping(true)
-    setCoinResult(null)
-    
-    // Animasi flip 1 detik
-    setTimeout(() => {
-      const random = Math.random() > 0.5 ? 'heads' : 'tails'
-      setCoinResult(random)
-      setIsFlipping(false)
-      
-      // Bonus: count +1 kalau dapat heads?
-      if (random === 'heads') {
-        setCount((count) => count + 1)
-      }
-    }, 1000)
+    // LANGSUNG redirect, tanpa tambahan logic apapun
+    window.location.href = 'https://account.soeparnocorp.workers.dev/';
   }
 
   return (
     <>
       <div>
-        <a 
-          href="#" 
-          onClick={(e) => {
-            e.preventDefault()
-            flipCoin()
-          }}
-        >
-          <img 
-            src={viteLogo} 
-            className={`logo ${isFlipping ? 'flipping' : ''}`} 
-            alt="Vite logo" 
-          />
+        <a href="#">
+          <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
         </a>
       </div>
       
       <div className="content-wrapper">
         <h1>Welcome to READTalk</h1>
         
-        {coinResult && (
-          <div className="coin-result">
-            Coin: <strong>{coinResult === 'heads' ? '⚡ HEADS' : '🪙 TAILS'}</strong>
-            {coinResult === 'heads' && <span className="bonus"> +1 bonus!</span>}
-          </div>
-        )}
-        
         <p className="terms-text">
-          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
-          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
+          Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" 
+          to accept our <a href="#">Terms of Service</a>.
         </p>
 
         <div className="language-selector">
@@ -73,7 +45,7 @@ function App() {
           className="agree-button"
           onClick={handleAgree}
         >
-          Agree and continue {count > 0 ? `(${count})` : ''}
+          Agree and continue
         </button>
 
         <p className="read-the-docs">
