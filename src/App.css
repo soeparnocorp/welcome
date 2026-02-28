@@ -1,106 +1,67 @@
-/* App.css - HANYA UNTUK APP.TSX */
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: transform;
-}
-
-/* ANIMASI COIN FLIP 360° 3 DETIK */
-@keyframes coinFlip {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-.coin-flip {
-  animation: coinFlip 3s infinite linear !important;
-}
-
-.content-wrapper {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
   max-width: 400px;
   margin: 0 auto;
-  width: 100%;
+  padding: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+@keyframes coinFlip {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.coin-flip {
+  animation: coinFlip 3s infinite linear;
 }
 
 h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 1rem 0 0.5rem;
-  color: inherit; /* MENGIKUTI WARNA DARI INDEX.CSS */
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-.terms-text {
-  font-size: 15px;
-  line-height: 1.4;
-  margin: 1rem 0;
-  color: inherit;
+.terms {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
 }
 
-.terms-text a {
+.terms a {
   color: #ff0000;
   text-decoration: none;
-  font-weight: 500;
 }
 
-.terms-text a:hover {
-  text-decoration: underline;
-}
-
-.language-selector {
-  margin: 1rem 0;
-}
-
-.language-selector span {
+.language {
   color: #ff0000;
+  margin-bottom: 20px;
   font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid #ff000020;
-  border-radius: 20px;
 }
 
-.language-selector span:hover {
-  background-color: #ff000010;
-}
-
-.agree-button {
+.agree {
   background-color: #ff0000;
   color: white;
   border: none;
-  border-radius: 24px;
-  padding: 12px 32px;
+  border-radius: 30px;
+  padding: 12px 40px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
+  margin-bottom: 20px;
   width: 100%;
-  max-width: 300px;
-  margin: 1rem auto;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
-}
-
-.agree-button:hover {
-  background-color: #d40000;
-  transform: scale(1.02);
+  max-width: 280px;
 }
 
 .copyright {
+  font-size: 11px;
   color: #888;
-  font-size: 12px;
-  margin-top: 2rem;
 }
