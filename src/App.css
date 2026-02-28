@@ -1,4 +1,4 @@
-/* App.css */
+/* App.css - HANYA UNTUK APP.TSX */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -9,33 +9,21 @@
 .logo {
   height: 6em;
   padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  will-change: transform;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #ff0000aa);
-}
-
-/* ANIMASI COIN FLIP - PERSIS MINTA HERMAN */
-@keyframes coin-flip {
-  0% {
+/* ANIMASI COIN FLIP 360° 3 DETIK */
+@keyframes coinFlip {
+  from {
     transform: rotateY(0deg);
   }
-  100% {
+  to {
     transform: rotateY(360deg);
   }
 }
 
 .coin-flip {
-  animation: coin-flip 3s infinite linear !important; /* 3 detik, konsisten */
-}
-
-/* Hapus animasi default */
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(1) .logo {
-    animation: none; /* Matikan animasi default */
-  }
+  animation: coinFlip 3s infinite linear !important;
 }
 
 .content-wrapper {
@@ -51,14 +39,14 @@ h1 {
   font-size: 28px;
   font-weight: 600;
   margin: 1rem 0 0.5rem;
-  color: #000;
+  color: inherit; /* MENGIKUTI WARNA DARI INDEX.CSS */
 }
 
 .terms-text {
-  color: #666;
   font-size: 15px;
   line-height: 1.4;
   margin: 1rem 0;
+  color: inherit;
 }
 
 .terms-text a {
@@ -111,8 +99,8 @@ h1 {
   transform: scale(1.02);
 }
 
-.read-the-docs {
+.copyright {
   color: #888;
-  text-align: center;
+  font-size: 12px;
   margin-top: 2rem;
 }
