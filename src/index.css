@@ -1,12 +1,12 @@
-/* index.css - mempertahankan warna dan tema asli */
+/* index.css */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,6 +29,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
 h1 {
@@ -49,7 +50,7 @@ button {
   font-size: 16px;
   font-weight: 600;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #f9f9f9;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -61,15 +62,4 @@ button:focus-visible {
   outline: 4px auto #ff0000;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #d40000;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/* Hapus semua preferensi dark mode karena kita hanya pakai light theme seperti screenshot */
