@@ -1,38 +1,48 @@
-import { useEffect } from 'react'
+// App.tsx
+import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  useEffect(() => {
-    let deviceId = localStorage.getItem('device_id');
-    if (!deviceId) {
-      deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem('device_id', deviceId);
-    }
-  }, []);
+  const [count, setCount] = useState(0)
 
   const handleAgree = () => {
-    window.location.href = 'https://account.soeparnocorp.workers.dev/';
+    setCount((count) => count + 1)
+    console.log('Agreed! Count:', count + 1)
+    // Redirect ke URL yang ditentukan
+    window.location.href = 'https://account.soeparnocorp.workers.dev/'
   }
 
   return (
-    <div className="container">
-      <img src={viteLogo} className="logo coin-flip" alt="logo" />
+    <>
+      <div>
+        <a href="#" onClick={(e) => e.preventDefault()}>
+          <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
+        </a>
+      </div>
       
-      <h1>Welcome to READTalk</h1>
-      
-      <p className="terms">
-        Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" to accept our <a href="#">Terms of Service</a>.
-      </p>
+      <div className="content-wrapper">
+        <h1>Welcome to READTalk</h1>
+        
+        <p className="terms-text">
+          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
+          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
+        </p>
 
-      <div className="language">English ▼</div>
+        <div className="language-selector">
+          <span>English ▼</span>
+        </div>
 
-      <button className="agree" onClick={handleAgree}>
-        Agree and continue
-      </button>
+        <button 
+          className="agree-button"
+          onClick={handleAgree}
+        >
+          Agree and continue {/* State count dihapus dari tampilan */}
+        </button>
 
-      <div className="copyright">© 2026 SOEPARNO ENTERPRISE Corp.</div>
-    </div>
+        {/* FOOTER DIHAPUS karena di screenshot WhatsApp tidak ada footer */}
+      </div>
+    </>
   )
 }
 
