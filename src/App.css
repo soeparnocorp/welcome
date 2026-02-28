@@ -5,79 +5,45 @@
 }
 
 body {
-  background: linear-gradient(135deg, #0a0a0f, #1a1a2e);
-  color: #fff;
-  font-family: 'Courier New', monospace;
-  overflow-x: hidden;
+  background: #0a0a0f;
+  color: white;
+  font-family: system-ui, sans-serif;
 }
 
 .chaos-canvas {
   display: block;
   width: 100%;
-  height: auto;
-  border-bottom: 3px solid #ff00ff;
-  box-shadow: 0 0 50px rgba(255, 0, 255, 0.3);
+  border-bottom: 2px solid #ff00ff;
 }
 
 .controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  display: flex;
   gap: 1rem;
   padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  justify-content: center;
 }
 
 button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #00ffff;
-  color: #00ffff;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  background: #1a1a1a;
+  color: white;
+  border: 1px solid #ff00ff;
+  padding: 0.8rem 1.5rem;
   border-radius: 4px;
-  backdrop-filter: blur(10px);
+  cursor: pointer;
 }
 
 button:hover {
-  background: #00ffff;
-  color: #000;
-  box-shadow: 0 0 30px #00ffff;
-  transform: scale(1.05);
+  background: #ff00ff;
+  color: black;
 }
 
 .reality {
   text-align: center;
   padding: 2rem;
-  background: rgba(255, 0, 255, 0.1);
-  border: 1px solid #ff00ff;
-  border-radius: 8px;
-  max-width: 400px;
-  margin: 2rem auto;
-  backdrop-filter: blur(10px);
-}
-
-.emoji {
-  font-size: 4rem;
-  animation: glitch 1s infinite;
-}
-
-@keyframes glitch {
-  0% { transform: translate(0); filter: hue-rotate(0deg); }
-  25% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
-  50% { transform: translate(5px, -5px); filter: hue-rotate(180deg); }
-  75% { transform: translate(-5px, -5px); filter: hue-rotate(270deg); }
-  100% { transform: translate(0); filter: hue-rotate(360deg); }
 }
 
 .footer {
   text-align: center;
+  color: #666;
   padding: 2rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.8rem;
-  border-top: 1px solid rgba(255, 0, 255, 0.3);
 }
