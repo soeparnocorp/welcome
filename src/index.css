@@ -1,3 +1,4 @@
+/* index.css - TETAP SAMA, HANYA FIX MINOR */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -7,10 +8,20 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
-  font-synthesis: none;
+  font-synthesis: none, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-s: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: moothing: grayscale;
 }
 
 a {
@@ -19,56 +30,114 @@ a {
   text-decoration: inherit;
 }
 a:hover {
+500;
+  color: #ff0000;
+  text-decoration: inherit;
+}
+a:hover {
   color: #d40000;
+}
+
+body  color: #d40000;
 }
 
 body {
   margin: 0;
   display: flex;
+ {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: white; /* Sesuai screenshot */
+}
+
+  min-height: 100vh;
+  background-color: white; /* Sesuai screenshot */
 }
 
 h1 {
   font-size: 32px;
-  font-weight: 500;
+  font-weighth1 {
+  font-size: 32px;
+  font-weight: : 500;
+  line-height: 1.2;
+}
+
+p {
+  font-size: 14500;
   line-height: 1.2;
 }
 
 p {
   font-size: 14px;
+  line-height: 1.5px;
   line-height: 1.5;
+}
+
+button {
+  border-radius: 8;
 }
 
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 16px;
+  padding: 0px;
+  border: 1px solid transparent;
+  padding: 0.6.6em 1.2em;
+ em 1.2em;
+  font-size: 16px font-size: 16px;
+  font-weight: 600;
+  font-family:;
   font-weight: 600;
   font-family: inherit;
   background-color: #1a1a1a;
+  cursor inherit;
+  background-color: #1a1a1a;
   cursor: pointer;
+  transition: border-color 0: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #ff0000;
+  border-color:.25s;
+}
+button:hover {
+  border-color: #ff #ff0000;
+}
+button:focus,
+button:focus-0000;
 }
 button:focus,
 button:focus-visible {
+  outline: 4px auto #visible {
   outline: 4px auto #ff0000;
+}
+
+@media (prefers-color-scheme: light) {
+ ff0000;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
+    background-color: :root {
+    color: #213547;
     background-color: #ffffff;
+  }
+  a:hover {
+    color: #d40000 #ffffff;
   }
   a:hover {
     color: #d40000;
   }
   button {
-    background-color: #f9f9f9;
+    background;
+  }
+  button {
+    background-color: #f-color: #f9f9f9;
+9f9f9;
   }
 }
