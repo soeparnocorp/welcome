@@ -1,32 +1,27 @@
 // App.tsx
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count] = useState(0) // state count dihapus fungsinya, cuma display
-
-  // Cek device ID di localStorage
+  // CEK DEVICE ID DI LOCALSTORAGE
   useEffect(() => {
     let deviceId = localStorage.getItem('device_id');
     if (!deviceId) {
       deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
       localStorage.setItem('device_id', deviceId);
     }
-    console.log('Device ID:', deviceId);
   }, []);
 
   const handleAgree = () => {
-    // LANGSUNG redirect, tanpa tambahan logic apapun
+    // LANGSUNG REDIRECT - TANPA COUNT, TANPA LOG
     window.location.href = 'https://account.soeparnocorp.workers.dev/';
   }
 
   return (
     <>
       <div>
-        <a href="#">
-          <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
-        </a>
+        <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
       </div>
       
       <div className="content-wrapper">
@@ -48,7 +43,7 @@ function App() {
           Agree and continue
         </button>
 
-        <p className="read-the-docs">
+        <p className="copyright">
           © 2026 SOEPARNO ENTERPRISE Corp.
         </p>
       </div>
