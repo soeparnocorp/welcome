@@ -1,16 +1,27 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --text-light: #213547;
+  --text-dark: rgba(255, 255, 255, 0.87);
+  --bg-light: #ffffff;
+  --bg-dark: #242424;
+  
+  color: var(--text-dark);
+  background-color: var(--bg-dark);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -28,21 +39,16 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-body.light {
-  color: #213547;
-  background-color: #ffffff;
-}
-
-body.dark {
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  background: linear-gradient(135deg, #646cff, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
 }
 
 button {
@@ -54,20 +60,50 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s;
 }
 button:hover {
   border-color: #646cff;
+  transform: scale(1.05);
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-body.light button {
-  background-color: #f9f9f9;
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--text-light);
+    background-color: var(--bg-light);
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+  h1 {
+    background: linear-gradient(135deg, #535bf2, #ff5252);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }
 
-body.dark button {
-  background-color: #1a1a1a;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #646cff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #535bf2;
 }
