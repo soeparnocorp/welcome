@@ -17,7 +17,7 @@
   will-change: transform;
 }
 
-/* Animasi coin flip 360° (seperti logo spin tapi dengan kecepatan serupa) */
+/* Animasi coin flip 360° */
 @keyframes coin-flip {
   from {
     transform: rotateY(0deg);
@@ -32,7 +32,10 @@
   animation: coin-flip infinite 20s linear;
 }
 
-/* Hapus semua hover effects */
+/* Hapus semua hover effects pada logo */
+.logo:hover {
+  filter: none;
+}
 
 .content-wrapper {
   display: flex;
@@ -106,5 +109,3 @@ h1 {
   background-color: #d40000;
   transform: scale(1.02);
 }
-
-/* Hapus .footer, .card, .read-the-docs, dan styles lainnya yang tidak diperlukan */
