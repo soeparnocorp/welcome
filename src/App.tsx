@@ -1,10 +1,8 @@
-// App.tsx
 import { useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  // CEK DEVICE ID DI LOCALSTORAGE
   useEffect(() => {
     let deviceId = localStorage.getItem('device_id');
     if (!deviceId) {
@@ -14,40 +12,27 @@ function App() {
   }, []);
 
   const handleAgree = () => {
-    // LANGSUNG REDIRECT - TANPA COUNT, TANPA LOG
     window.location.href = 'https://account.soeparnocorp.workers.dev/';
   }
 
   return (
-    <>
-      <div>
-        <img src={viteLogo} className="logo coin-flip" alt="Vite logo" />
-      </div>
+    <div className="container">
+      <img src={viteLogo} className="logo coin-flip" alt="logo" />
       
-      <div className="content-wrapper">
-        <h1>Welcome to READTalk</h1>
-        
-        <p className="terms-text">
-          Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" 
-          to accept our <a href="#">Terms of Service</a>.
-        </p>
+      <h1>Welcome to READTalk</h1>
+      
+      <p className="terms">
+        Read our <a href="#">Privacy Policies</a>. Tap "Agree and continue" to accept our <a href="#">Terms of Service</a>.
+      </p>
 
-        <div className="language-selector">
-          <span>English ▼</span>
-        </div>
+      <div className="language">English ▼</div>
 
-        <button 
-          className="agree-button"
-          onClick={handleAgree}
-        >
-          Agree and continue
-        </button>
+      <button className="agree" onClick={handleAgree}>
+        Agree and continue
+      </button>
 
-        <p className="copyright">
-          © 2026 SOEPARNO ENTERPRISE Corp.
-        </p>
-      </div>
-    </>
+      <div className="copyright">© 2026 SOEPARNO ENTERPRISE Corp.</div>
+    </div>
   )
 }
 
