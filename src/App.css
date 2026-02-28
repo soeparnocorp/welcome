@@ -1,4 +1,4 @@
-/* App.css - mempertahankan POSISI dan UKURAN persis screenshot */
+/* App.css */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -17,12 +17,7 @@
   will-change: transform;
 }
 
-/* Hapus hover effect */
-.logo:hover {
-  /* Tidak ada efek */
-}
-
-/* Animasi coin flip 360° */
+/* Animasi coin flip 360° (seperti logo spin tapi dengan kecepatan serupa) */
 @keyframes coin-flip {
   from {
     transform: rotateY(0deg);
@@ -32,31 +27,34 @@
   }
 }
 
+/* Terapkan animasi ke logo */
 .coin-flip {
   animation: coin-flip infinite 20s linear;
 }
+
+/* Hapus semua hover effects */
 
 .content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 400px; /* UKURAN persis seperti screenshot */
+  max-width: 400px;
   margin: 0 auto;
   width: 100%;
 }
 
 h1 {
-  font-size: 28px; /* UKURAN sesuai screenshot */
+  font-size: 28px;
   font-weight: 600;
-  margin: 1rem 0 0.5rem; /* POSISI spacing sesuai screenshot */
+  margin: 1rem 0 0.5rem;
   color: #000;
 }
 
 .terms-text {
   color: #666;
-  font-size: 15px; /* UKURAN sesuai screenshot */
+  font-size: 15px;
   line-height: 1.4;
-  margin: 1rem 0; /* POSISI sesuai screenshot */
+  margin: 1rem 0;
 }
 
 .terms-text a {
@@ -65,8 +63,12 @@ h1 {
   font-weight: 500;
 }
 
+.terms-text a:hover {
+  text-decoration: underline;
+}
+
 .language-selector {
-  margin: 1rem 0; /* POSISI sesuai screenshot */
+  margin: 1rem 0;
 }
 
 .language-selector span {
@@ -80,20 +82,29 @@ h1 {
   border-radius: 20px;
 }
 
+.language-selector span:hover {
+  background-color: #ff000010;
+}
+
 .agree-button {
   background-color: #ff0000;
   color: white;
   border: none;
-  border-radius: 24px; /* UKURAN border sesuai screenshot */
-  padding: 12px 32px; /* UKURAN tombol sesuai screenshot */
+  border-radius: 24px;
+  padding: 12px 32px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
-  max-width: 300px; /* UKURAN maksimal tombol */
-  margin: 1rem auto; /* POSISI sesuai screenshot */
+  max-width: 300px;
+  margin: 1rem auto;
   transition: all 0.2s;
   box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
 }
 
-/* Hapus .read-the-docs karena footer dihapus */
+.agree-button:hover {
+  background-color: #d40000;
+  transform: scale(1.02);
+}
+
+/* Hapus .footer, .card, .read-the-docs, dan styles lainnya yang tidak diperlukan */
