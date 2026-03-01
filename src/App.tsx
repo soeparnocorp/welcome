@@ -8,9 +8,7 @@ function App() {
   const handleAgree = () => {
     setCount((count) => count + 1)
     console.log('Agreed! Count:', count + 1)
-
-    // Redirect ke Pages Function auth yang bakal handle OpenAuth
-    window.location.href = '/authorize'
+    // Fungsi navigasi / pages functions di sini
   }
 
   return (
