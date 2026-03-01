@@ -10,7 +10,7 @@ function App() {
     console.log('Agreed! Count:', count + 1)
 
     // Redirect ke Pages Function auth yang bakal handle OpenAuth
-    window.location.href = '/auth'
+    window.location.href = '/authorize'
   }
 
   return (
