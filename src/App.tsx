@@ -1,24 +1,12 @@
+// src/App.tsx
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
+
   const handleAgree = () => {
-    // Dapetin device ID dari localStorage
-    let deviceId = localStorage.getItem('device_id')
-    if (!deviceId) {
-      deviceId = 'device_' + Math.random().toString(36).substring(2, 15)
-      localStorage.setItem('device_id', deviceId)
-    }
-    
-    // Redirect ke OpenAuth Worker
-    // Asumsi worker lo di deploy di https://openauth.soeparnocorp.workers.dev
-    const authUrl = new URL('https://openauth.soeparnocorp.workers.dev')
-    authUrl.searchParams.set('redirect_uri', 'https://id-readtalk.pages.dev/callback')
-    authUrl.searchParams.set('client_id', 'readtalk-app')
-    authUrl.searchParams.set('response_type', 'code')
-    authUrl.searchParams.set('device_id', deviceId)
-    
-    window.location.href = authUrl.toString()
+    // Redirect langsung ke OpenAuth Worker
+    window.location.href = 'https://openauth.soeparnocorp.workers.dev'
   }
 
   return (
