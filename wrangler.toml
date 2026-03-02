@@ -28,7 +28,7 @@ id = "ff653b9c-4e2c-479d-8aa4-497da62de3c5"
 [[kv_namespaces]]
 binding = "PAGES_KV"
 name = "readtalk_kv"
-id = ""
+id = "13a468e30cc84fe58ff6297d799050f2"
 
 [[r2_buckets]]
 binding = "PAGES_STORAGE"
