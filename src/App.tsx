@@ -1,14 +1,33 @@
+import { useEffect, useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const response = await fetch('/api/auth/session')
+      if (response.ok) {
+        const data = await response.json()
+        setIsAuthenticated(true)
+        setUserEmail(data.user.email)
+      }
+    }
+    checkSession()
+  }, [])
+
   const handleAgree = () => {
-    // Redirect ke OpenAuth server
-    // Ganti URL ini dengan URL OpenAuth server Anda
-    const openAuthUrl = 'http://openauth.soeparnocorp.workers.dev' // atau URL deployment Anda
+    const openAuthUrl = 'https://openauth.soeparnocorp.workers.dev'
+    const redirectUri = 'https://id-readtalk.pages.dev/auth/callback'
+    const clientId = 'your-client-id'
     
-    // Redirect ke OpenAuth untuk memulai autentikasi
-    window.location.href = openAuthUrl
+    window.location.href = `${openAuthUrl}/authorize?` + new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      response_type: 'code'
+    })
   }
 
   return (
@@ -22,21 +41,30 @@ function App() {
       <div className="content-wrapper">
         <h1>Welcome to READTalk</h1>
         
-        <p className="terms-text">
-          Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
-          to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
-        </p>
+        {isAuthenticated ? (
+          <div className="user-profile">
+            <p>Welcome, {userEmail}!</p>
+            <p>You have successfully agreed to the terms.</p>
+          </div>
+        ) : (
+          <p className="terms-text">
+            Read our <a href="https://readtalk.pages.dev/">Privacy Policies</a>. Tap "Agree and continue" 
+            to accept our <a href="https://readtalk.pages.dev/">Terms of Service</a>.
+          </p>
+        )}
 
         <div className="language-selector">
           <span>English ▼</span>
         </div>
 
-        <button 
-          className="agree-button"
-          onClick={handleAgree}
-        >
-          Agree and continue
-        </button>
+        {!isAuthenticated && (
+          <button 
+            className="agree-button"
+            onClick={handleAgree}
+          >
+            Agree and continue
+          </button>
+        )}
 
         <p className="read-the-docs">
           © 2026 SOEPARNO ENTERPRISE Corp.
