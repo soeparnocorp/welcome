@@ -1,28 +1,24 @@
-import { useState, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  // Fungsi untuk generate/get device ID
-  const getDeviceId = () => {
+  const handleAgree = () => {
+    // Dapetin device ID dari localStorage
     let deviceId = localStorage.getItem('device_id')
-    
     if (!deviceId) {
-      // Generate random device ID
-      deviceId = 'device_' + Math.random().toString(36).substring(2, 15) + 
-                 Math.random().toString(36).substring(2, 15)
+      deviceId = 'device_' + Math.random().toString(36).substring(2, 15)
       localStorage.setItem('device_id', deviceId)
     }
     
-    return deviceId
-  }
-
-  const handleAgree = () => {
-    const deviceId = getDeviceId()
-    console.log('Device ID:', deviceId)
+    // Redirect ke OpenAuth Worker
+    // Asumsi worker lo di deploy di https://openauth.soeparnocorp.workers.dev
+    const authUrl = new URL('https://openauth.soeparnocorp.workers.dev')
+    authUrl.searchParams.set('redirect_uri', 'https://id-readtalk.pages.dev/callback')
+    authUrl.searchParams.set('client_id', 'readtalk-app')
+    authUrl.searchParams.set('response_type', 'code')
+    authUrl.searchParams.set('device_id', deviceId)
     
-    // Redirect ke openauth dengan device ID
-    window.location.href = `https://openauth.soeparnocorp.workers.dev?device_id=${deviceId}`
+    window.location.href = authUrl.toString()
   }
 
   return (
