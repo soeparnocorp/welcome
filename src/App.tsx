@@ -5,14 +5,21 @@ import './App.css'
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const checkSession = async () => {
-      const response = await fetch('/api/auth/session')
-      if (response.ok) {
-        const data = await response.json()
-        setIsAuthenticated(true)
-        setUserEmail(data.user.email)
+      try {
+        const response = await fetch('/api/auth/session')
+        if (response.ok) {
+          const data = await response.json()
+          setIsAuthenticated(true)
+          setUserEmail(data.user.email)
+        }
+      } catch (error) {
+        console.error('Session check failed:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
     checkSession()
@@ -28,6 +35,10 @@ function App() {
       redirect_uri: redirectUri,
       response_type: 'code'
     })
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (
