@@ -1,21 +1,37 @@
-name = "app-readtalk"
+name = "id-readtalk"
 type = "typescript"
-compatibility_date = "2026-01-24"
+compatibility_date = "2026-03-03"
 account_id = "53d61c09062b1ca11788fa763f79313a"
 
 [build]
 command = "npm run build"
 upload.format = "service-worker"
-upload.dir = "dist"                
+upload.dir = "dist"
 
 [[bindings]]
 type = "service_worker"
-name = "OPENAUTH_WORKER"           
-service = "openauth"               
+name = "OPENAUTH_WORKER"
+service = "openauth"
 environment = "production"
 
 [[bindings]]
-type = "service'worker"
-name = "CHAT_WORKER"
-service = "chat"
+type = "service_worker"
+name = "SETTINGS_WORKER"
+service = "account"
+environment = "production"
+
+[[kv_namespaces]]
+binding = "PAGES_KV"
+id = "readtalk_kv"
+environment = "production"
+
+[[d1_databases]]
+binding = "PAGES_DB"
+database_name = "readtalk_db"
+database_id = ""
+environment = "production"
+
+[[r2_buckets]]
+binding = "PAGES_STORAGE"
+bucket_name = ""
 environment = "production"
