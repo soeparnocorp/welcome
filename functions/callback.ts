@@ -9,7 +9,7 @@ export async function onRequest(context) {
   }
   
   try {
-    // 1. Validasi code ke OPENAUTH_WORKER
+    // 1. Validasi code ke openauth
     const userResponse = await env.OPENAUTH_WORKER.fetch('/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,28 +19,16 @@ export async function onRequest(context) {
     const user = await userResponse.json()
     // user = { id: '123', email: 'user@example.com' }
     
-    // 2. Simpan session di PAGES_KV
+    // 2. Simpan session di KV
     const token = crypto.randomUUID()
     await env.PAGES_KV.put(`session:${token}`, JSON.stringify({
       userId: user.id,
       email: user.email,
-      step: 'new_user'  // tanda baru login
-    }), { expirationTtl: 3600 }) // 1 jam
+      step: 'need_settings'  // butuh isi yourname
+    }), { expirationTtl: 3600 })
     
-    // 3. Simpan user di PAGES_DB (kalo belum ada)
-    await env.PAGES_DB.prepare(
-      `INSERT OR IGNORE INTO users (id, email, created_at) 
-       VALUES (?, ?, ?)`
-    ).bind(user.id, user.email, Date.now()).run()
-    
-    // 4. REDIRECT KE SETTINGS_WORKER (account)
-    //    untuk isi form Yourname
-    const accountUrl = new URL('https://account.soeparnocorp.workers.dev')
-    accountUrl.searchParams.set('token', token)
-    accountUrl.searchParams.set('user_id', user.id)
-    accountUrl.searchParams.set('email', user.email)
-    
-    return Response.redirect(accountUrl.toString(), 302)
+    // 3. Redirect ke SETTINGS (isi yourname)
+    return Response.redirect(`https://id-readtalk.pages.dev/settings?token=${token}`, 302)
     
   } catch (error) {
     console.error('Callback error:', error)
