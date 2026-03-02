@@ -20,18 +20,16 @@ name = "SETTINGS_WORKER"
 service = "account"
 environment = "production"
 
-[[kv_namespaces]]
-binding = "PAGES_KV"
-id = "readtalk_kv"
-environment = "production"
-
 [[d1_databases]]
 binding = "PAGES_DB"
-database_name = "readtalk_db"
-database_id = ""
-environment = "production"
+name = "readtalk_db"
+id = "ff653b9c-4e2c-479d-8aa4-497da62de3c5"
+
+[[kv_namespaces]]
+binding = "PAGES_KV"
+name = "readtalk_kv"
+id = ""
 
 [[r2_buckets]]
 binding = "PAGES_STORAGE"
-bucket_name = "readtalk-r2"
-environment = "production"
+name = "readtalk-r2"
