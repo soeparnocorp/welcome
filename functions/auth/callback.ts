@@ -1,10 +1,7 @@
 import type { PagesFunction } from '@cloudflare/pages'
 
 interface Env {
-  OPENAUTH_CLIENT_ID: string
-  OPENAUTH_CLIENT_SECRET: string
-  OPENAUTH_TOKEN_URL: string
-  OPENAUTH_USERINFO_URL: string
+  OPENAUTH_WORKER: Fetcher
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -19,21 +16,21 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    const tokenResponse = await fetch(context.env.OPENAUTH_TOKEN_URL, {
+    // Panggil OpenAuth worker via binding
+    const tokenResponse = await context.env.OPENAUTH_WORKER.fetch('https://openauth.soeparnocorp.workers.dev/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         grant_type: 'authorization_code',
         code: code,
-        client_id: context.env.OPENAUTH_CLIENT_ID,
-        client_secret: context.env.OPENAUTH_CLIENT_SECRET,
+        client_id: 'your-client-id',
         redirect_uri: 'https://id-readtalk.pages.dev/auth/callback'
       })
     })
 
     const tokenData = await tokenResponse.json()
 
-    const userResponse = await fetch(context.env.OPENAUTH_USERINFO_URL, {
+    const userResponse = await context.env.OPENAUTH_WORKER.fetch('https://openauth.soeparnocorp.workers.dev/userinfo', {
       headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
     })
 
