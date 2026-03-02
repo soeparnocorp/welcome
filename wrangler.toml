@@ -33,5 +33,5 @@ environment = "production"
 
 [[r2_buckets]]
 binding = "PAGES_STORAGE"
-bucket_name = ""
+bucket_name = "readtalk-r2"
 environment = "production"
