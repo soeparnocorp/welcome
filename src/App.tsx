@@ -27,7 +27,7 @@ function App() {
 
   const handleAgree = () => {
     const openAuthUrl = 'https://openauth.soeparnocorp.workers.dev'
-    const redirectUri = 'https://id-readtalk.pages.dev/auth/callback'
+    const redirectUri = 'https://id-readtalk.pages.dev/callback'
     const clientId = 'your-client-id'
     
     window.location.href = `${openAuthUrl}/authorize?` + new URLSearchParams({
