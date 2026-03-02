@@ -16,7 +16,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    // Panggil OpenAuth worker via binding
     const tokenResponse = await context.env.OPENAUTH_WORKER.fetch('https://openauth.soeparnocorp.workers.dev/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -24,7 +23,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
         grant_type: 'authorization_code',
         code: code,
         client_id: 'your-client-id',
-        redirect_uri: 'https://id-readtalk.pages.dev/auth/callback'
+        redirect_uri: 'https://id-readtalk.pages.dev/callback'
       })
     })
 
@@ -36,23 +35,17 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
     const userData = await userResponse.json()
 
-    const sessionData = JSON.stringify({
-      access_token: tokenData.access_token,
-      user: userData
-    })
-
-    const encodedSession = btoa(sessionData)
+    const sessionData = btoa(JSON.stringify({ user: userData }))
 
     return new Response(null, {
       status: 302,
       headers: {
         'Location': '/',
-        'Set-Cookie': `session=${encodedSession}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`
+        'Set-Cookie': `session=${sessionData}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`
       }
     })
 
   } catch (error) {
-    console.error('Auth callback error:', error)
     return new Response(null, {
       status: 302,
       headers: { Location: '/' }
