@@ -13,3 +13,9 @@ type = "service_worker"
 name = "OPENAUTH_WORKER"           
 service = "openauth"               
 environment = "production"
+
+[[bindings]]
+type = "service'worker"
+name = "CHAT_WORKER"
+service = "chat"
+environment = "production"
