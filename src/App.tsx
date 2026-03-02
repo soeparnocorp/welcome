@@ -1,14 +1,14 @@
-import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   const handleAgree = () => {
-    setCount((count) => count + 1)
-    console.log('Agreed! Count:', count + 1)
-    // Fungsi navigasi / pages functions di sini
+    // Redirect ke OpenAuth server
+    // Ganti URL ini dengan URL OpenAuth server Anda
+    const openAuthUrl = 'http://openauth.soeparnocorp.workers.dev' // atau URL deployment Anda
+    
+    // Redirect ke OpenAuth untuk memulai autentikasi
+    window.location.href = openAuthUrl
   }
 
   return (
@@ -35,7 +35,7 @@ function App() {
           className="agree-button"
           onClick={handleAgree}
         >
-          Agree and continue {count > 0 ? `(${count})` : ''}
+          Agree and continue
         </button>
 
         <p className="read-the-docs">
