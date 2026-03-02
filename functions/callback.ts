@@ -1,17 +1,26 @@
-export const onRequest: PagesFunction = async (context) => {
-  const { request } = context
-  const url = new URL(request.url)
-  const code = url.searchParams.get('code')
+export async function onRequest(context) {
+  const { request, env } = context
+  const code = new URL(request.url).searchParams.get('code')
   
-  // Log untuk debugging (bisa dilihat di Cloudflare logs)
-  console.log('Callback received with code:', code)
+  // 🔥 1. Validasi code ke openauth worker
+  const user = await env.OPENAUTH_WORKER.fetch('/verify', {
+    method: 'POST',
+    body: JSON.stringify({ code })
+  }).then(r => r.json())
   
-  // Kalau gak ada code, balikin ke halaman utama
-  if (!code) {
-    return Response.redirect('https://id-readtalk.pages.dev/', 302)
+  if (!user.valid) {
+    return Response.redirect('/', 302) // Gak valid, tendang balik
   }
   
-  // Redirect ke halaman chat dengan code
-  // 🔥 INI YANG LO MAU: langsung menuju ke chat.soeparnocorp.workers.dev
-  return Response.redirect(`https://chat.soeparnocorp.workers.dev/?code=${code}`, 302)
+  // 🔥 2. Minta session token dari chat worker
+  const session = await env.CHAT_WORKER.fetch('/create-session', {
+    method: 'POST',
+    body: JSON.stringify({ 
+      email: user.email,
+      id: user.id 
+    })
+  }).then(r => r.json())
+  
+  // 🔥 3. Redirect dengan token (bukan code asli!)
+  return Response.redirect(`https://chat.soeparnocorp.workers.dev/?token=${session.token}`, 302)
 }
