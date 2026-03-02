@@ -4,9 +4,21 @@ import './App.css'
 
 function App() {
 
-  const handleAgree = () => {
-    // Redirect langsung ke OpenAuth Worker
-    window.location.href = 'https://openauth.soeparnocorp.workers.dev'
+  const handleAgree = async () => {
+    try {
+      const res = await fetch('/functions/auth.ts', { method: 'POST' })
+      const data = await res.json()
+
+      if (data.success) {
+        // redirect ke Room SPA
+        window.location.href = '/room.html'
+      } else {
+        alert('Auth failed: ' + (data.error || 'Unknown error'))
+      }
+    } catch (err) {
+      console.error('Auth request failed', err)
+      alert('Auth request failed')
+    }
   }
 
   return (
