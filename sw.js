@@ -1,4 +1,4 @@
-const CACHE_NAME = "readtalk-cache-v1.0";
+const CACHE_NAME = "readtalk-cache-v2.0";
 const urlsToCache = ["/", "/index.html", "/512.svg", "/192.svg"];
 
 self.addEventListener("install", (event) => {
