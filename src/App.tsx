@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch('/api/auth/session')
+        const response = await fetch('/session')
         if (response.ok) {
           const data = await response.json()
           setIsAuthenticated(true)
