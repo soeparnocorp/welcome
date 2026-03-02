@@ -5,7 +5,6 @@ import './App.css'
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const checkSession = async () => {
@@ -18,8 +17,6 @@ function App() {
         }
       } catch (error) {
         console.error('Session check failed:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
     checkSession()
@@ -35,10 +32,6 @@ function App() {
       redirect_uri: redirectUri,
       response_type: 'code'
     })
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
   }
 
   return (
