@@ -3,16 +3,9 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false)
-
   const handleAgree = () => {
-    setIsLoading(true)
-    
-    // Redirect ke pages function /auth
-    window.location.href = '/auth'
-    
-    // Note: Setelah redirect, component ini akan unmount
-    // Jadi setIsLoading(false) gak akan pernah dieksekusi
+    // Langsung redirect ke Pages Function yang mulai OAuth
+    window.location.href = "/api/login";
   }
 
   return (
@@ -38,9 +31,8 @@ function App() {
         <button 
           className="agree-button"
           onClick={handleAgree}
-          disabled={isLoading}
         >
-          {isLoading ? 'Redirecting...' : 'Agree and continue'}
+          Agree and continue
         </button>
 
         <p className="read-the-docs">
