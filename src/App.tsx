@@ -9,7 +9,7 @@ function App() {
       const data = await res.json()
 
       if (data.success) {
-        window.location.href = '/room.html' // redirect SPA
+        window.location.href = '/index.html' // redirect SPA
       } else {
         alert('Auth failed: ' + (data.error || 'Unknown error'))
       }
