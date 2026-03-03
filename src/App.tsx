@@ -14,7 +14,7 @@ function App() {
     
     try {
       // 1. Kirim request ke auth API
-      const response = await fetch('/auth', {
+      const response = await fetch('/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
