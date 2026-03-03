@@ -1,17 +1,33 @@
-// /functions/account.ts
-// Route: /account (atau rename file /functions/account/index.ts biar /account)
-
+// functions/account.ts
 export async function onRequest(context) {
-  const cookie = context.request.headers.get("Cookie") || "";
-  if (!cookie.includes("access_token=")) {
-    return Response.redirect("/", 302); // balik ke home kalau belum login
+  const { env, request } = context;
+  const cookie = request.headers.get("Cookie") || "";
+  
+  // 1. Ambil token dari cookie
+  const match = cookie.match(/access_token=([^;]+)/);
+  if (!match) return Response.redirect("/", 302);
+  
+  const token = match[1];
+  
+  try {
+    // 2. Validasi token ke OpenAuth pake binding
+    const userRes = await env.OPENAUTH.fetch('/userinfo', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (!userRes.ok) return Response.redirect("/", 302);
+    
+    const user = await userRes.json();
+    const userId = user.id;
+    
+    // 3. Ambil username dari KV
+    const username = await env.PAGES_KV.get(`user:${userId}:name`) || 'Guest';
+    
+    // 4. Redirect ke account.html dengan parameter
+    return Response.redirect(`/account.html?userId=${userId}&username=${encodeURIComponent(username)}`, 302);
+    
+  } catch (error) {
+    console.error('Account error:', error);
+    return Response.redirect("/", 302);
   }
-
-  // Kalau mau, fetch user info dari /userinfo endpoint OpenAuth pake token
-  // const userRes = await fetch("https://openauth.soeparnocorp.workers.dev/userinfo", {
-  //   headers: { Authorization: `Bearer ${tokenFromCookie}` }
-  // });
-  // const user = await userRes.json();
-
-  return new Response("Welcome to your account page! (Protected)", { status: 200 });
 }
