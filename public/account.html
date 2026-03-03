@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>READTalk</title>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      width: 100%
+      width: 100%;
       overflow: hidden;
     }
     
@@ -30,7 +32,7 @@
   <!-- Loading indicator -->
   <div class="loading" id="loading">Loading chat...</div>
   
-  <!-- Iframe yang memuat account worker -->
+  <!-- iframe account worker -->
   <iframe 
     id="chatFrame"
     class="chat-iframe"
@@ -40,20 +42,20 @@
   ></iframe>
 
   <script>
-    // Ambil data dari URL parameter atau localStorage
+    // URL parameter localStorage
     const params = new URLSearchParams(window.location.search)
     const userId = params.get('userId') || localStorage.getItem('userId')
     const username = params.get('username') || localStorage.getItem('username')
     
-    // Set src iframe ke account worker dengan parameter
+    // iframe account worker parameter
     const frame = document.getElementById('chatFrame')
     frame.src = `https://account.soeparnocorp.workers.dev?userId=${userId}&username=${encodeURIComponent(username)}`
     
-    // Simpan untuk next visit
+    // next visit
     if (userId) localStorage.setItem('userId', userId)
     if (username) localStorage.setItem('username', username)
     
-    // Listen pesan dari iframe (optional)
+    // Listen iframe (optional)
     window.addEventListener('message', (event) => {
       if (event.data.type === 'LOGOUT') {
         // Clear data dan redirect ke home
