@@ -1,8 +1,10 @@
+// src/App.tsx
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const handleAgree = () => {
+    // Trigger Pages Function /auth
     window.location.href = '/auth'
   }
 
