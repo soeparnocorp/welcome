@@ -1,11 +1,8 @@
-// src/App.tsx
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const handleAgree = () => {
-    // Placeholder: Pages Function akan handle OpenAuth internal
-    // Redirect ke halaman after-login
     window.location.href = '/auth'
   }
 
