@@ -5,7 +5,7 @@ import './App.css'
 function App() {
   const handleAgree = async () => {
     try {
-      const res = await fetch('/functions/auth.ts', { method: 'POST' })
+      const res = await fetch('/auth.ts', { method: 'POST' })
       const data = await res.json()
 
       if (data.success) {
