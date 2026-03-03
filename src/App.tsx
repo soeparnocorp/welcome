@@ -1,22 +1,18 @@
 // src/App.tsx
+import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const handleAgree = async () => {
-    try {
-      const res = await fetch('/auth.ts', { method: 'POST' })
-      const data = await res.json()
+  const [agreed, setAgreed] = useState(false)
 
-      if (data.success) {
-        window.location.href = '/index.html' // redirect SPA
-      } else {
-        alert('Auth failed: ' + (data.error || 'Unknown error'))
-      }
-    } catch (err) {
-      console.error('Auth request failed', err)
-      alert('Auth request failed')
-    }
+  const handleAgree = () => {
+    // tandai bahwa user sudah klik Agree
+    setAgreed(true)
+    console.log('User agreed!')
+
+    // redirect ke halaman after-login (placeholder)
+    window.location.href = '/room.html'
   }
 
   return (
@@ -39,11 +35,16 @@ function App() {
           <span>English ▼</span>
         </div>
 
-        <button className="agree-button" onClick={handleAgree}>
+        <button
+          className="agree-button"
+          onClick={handleAgree}
+        >
           Agree and continue
         </button>
 
-        <p className="read-the-docs">© 2026 SOEPARNO ENTERPRISE Corp.</p>
+        <p className="read-the-docs">
+          © 2026 SOEPARNO ENTERPRISE Corp.
+        </p>
       </div>
     </>
   )
