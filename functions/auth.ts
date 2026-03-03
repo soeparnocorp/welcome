@@ -1,14 +1,12 @@
 // functions/auth.ts
 import type { PagesFunction } from '@cloudflare/workers-types'
 
-export const onRequest: PagesFunction = async (context) => {
-  const { env, request } = context
-
+export const onRequest: PagesFunction = async ({ env, request }) => {
   // Placeholder panggilan internal ke OPENAUTH_WORKER
-  // Tidak fetch ke URL eksternal, langsung pakai binding
+  // Pages Function hanya trigger worker binding, tidak fetch ke URL eksternal
   const workerResponse = await env.OPENAUTH_WORKER.fetch(request)
 
-  // Hanya contoh response JSON sederhana
+  // Return JSON sederhana sebagai tanda OpenAuth worker dipanggil
   return new Response(
     JSON.stringify({
       message: 'OpenAuth worker triggered (placeholder)',
