@@ -1,55 +1,78 @@
 // src/App.tsx
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [showAuth, setShowAuth] = useState(false)
+  const popupRef = useRef<Window | null>(null)
+  const checkIntervalRef = useRef<number>()
 
-  const handleAgree = async () => {
-    setLoading(true)
-    setError('')
-    
-    try {
-      // 1. Kirim request ke auth API
-      const response = await fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          agreed: true,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error(`Auth failed: ${response.status}`)
+  // Listen untuk pesan dari popup
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'LOGIN_SUCCESS') {
+        // Sembunyikan overlay
+        setShowAuth(false)
+        
+        // Bersihkan interval
+        if (checkIntervalRef.current) {
+          clearInterval(checkIntervalRef.current)
+        }
+        
+        // Redirect ke account
+        window.location.href = '/account.html'
       }
-
-      // 2. Dapetin response dari server
-      const data = await response.json()
-      
-      // 3. Simpan token/user data (misal di localStorage)
-      if (data.token) {
-        localStorage.setItem('auth_token', data.token)
-        localStorage.setItem('user_data', JSON.stringify(data.user))
-      }
-      
-      // 4. Redirect ke dashboard/account
-      window.location.href = data.redirectUrl || '/account.html'
-      
-    } catch (err) {
-      console.error('Auth error:', err)
-      setError(err instanceof Error ? err.message : 'Authentication failed')
-      setCount(c => c + 1) // Tetap increment buat tracking percobaan
-    } finally {
-      setLoading(false)
     }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
+
+  const handleAgree = () => {
+    setCount(c => c + 1)
+    
+    // Tampilkan overlay dulu
+    setShowAuth(true)
+    
+    // Kasih sedikit delay biar smooth
+    setTimeout(() => {
+      // Buka popup tapi disembunyikan
+      const width = 500
+      const height = 600
+      const left = window.screen.width / 2 - width / 2
+      const top = window.screen.height / 2 - height / 2
+
+      // Bikin popup tanpa toolbar, tanpa title bar, tapi diposisikan di belakang
+      const popup = window.open(
+        '/auth', 
+        '_blank', // Pake _blank biar gak muncul sebagai popup
+        `width=${width},height=${height},left=${left},top=${top},popup=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=1,resizable=1`
+      )
+
+      popupRef.current = popup
+
+      // Cek terus apakah popup ditutup paksa
+      checkIntervalRef.current = window.setInterval(() => {
+        if (popup?.closed) {
+          setShowAuth(false)
+          if (checkIntervalRef.current) {
+            clearInterval(checkIntervalRef.current)
+          }
+        }
+      }, 500)
+    }, 100)
   }
+
+  // Bersihkan interval saat component unmount
+  useEffect(() => {
+    return () => {
+      if (checkIntervalRef.current) {
+        clearInterval(checkIntervalRef.current)
+      }
+    }
+  }, [])
 
   return (
     <>
@@ -71,26 +94,40 @@ function App() {
           <span>English ▼</span>
         </div>
 
-        {error && (
-          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
-            {error}
-          </div>
-        )}
-
         <button
           className="agree-button"
           onClick={handleAgree}
-          disabled={loading}
-          style={{ opacity: loading ? 0.7 : 1 }}
         >
-          {loading ? 'Processing...' : 'Agree and continue'}
-          {count > 0 && !loading && ` (${count})`}
+          Agree and continue {count > 0 ? `(${count})` : ''}
         </button>
 
         <p className="read-the-docs">
           © 2026 SOEPARNO ENTERPRISE Corp.
         </p>
       </div>
+
+      {/* OVERLAY MODAL - INI YANG KELIHATAN, BUKAN POPUPNYA */}
+      {showAuth && (
+        <div className="auth-overlay">
+          <div className="auth-modal">
+            <div className="auth-modal-header">
+              <h2>Sign in to READTalk</h2>
+              <button 
+                className="close-button"
+                onClick={() => {
+                  setShowAuth(false)
+                  popupRef.current?.close()
+                }}
+              >✕</button>
+            </div>
+            <div className="auth-modal-content">
+              <div className="loading-spinner"></div>
+              <p>Loading authentication page...</p>
+              <p className="hint">You may see a new window briefly - that's normal!</p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
