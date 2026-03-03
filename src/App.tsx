@@ -5,13 +5,50 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleAgree = () => {
-    setCount((c) => c + 1)
-    console.log('Agreed! Count:', count + 1)
+  const handleAgree = async () => {
+    setLoading(true)
+    setError('')
+    
+    try {
+      // 1. Kirim request ke auth API
+      const response = await fetch('/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          agreed: true,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        })
+      })
 
-    // Redirect ke Pages Function auth.ts
-    window.location.href = '/auth'
+      if (!response.ok) {
+        throw new Error(`Auth failed: ${response.status}`)
+      }
+
+      // 2. Dapetin response dari server
+      const data = await response.json()
+      
+      // 3. Simpan token/user data (misal di localStorage)
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token)
+        localStorage.setItem('user_data', JSON.stringify(data.user))
+      }
+      
+      // 4. Redirect ke dashboard/account
+      window.location.href = data.redirectUrl || '/account.html'
+      
+    } catch (err) {
+      console.error('Auth error:', err)
+      setError(err instanceof Error ? err.message : 'Authentication failed')
+      setCount(c => c + 1) // Tetap increment buat tracking percobaan
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -34,11 +71,20 @@ function App() {
           <span>English ▼</span>
         </div>
 
+        {error && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+            {error}
+          </div>
+        )}
+
         <button
           className="agree-button"
           onClick={handleAgree}
+          disabled={loading}
+          style={{ opacity: loading ? 0.7 : 1 }}
         >
-          Agree and continue {count > 0 ? `(${count})` : ''}
+          {loading ? 'Processing...' : 'Agree and continue'}
+          {count > 0 && !loading && ` (${count})`}
         </button>
 
         <p className="read-the-docs">
