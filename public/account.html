@@ -29,10 +29,8 @@
   </style>
 </head>
 <body>
-  <!-- Loading indicator -->
   <div class="loading" id="loading">Loading chat...</div>
   
-  <!-- iframe account worker -->
   <iframe 
     id="chatFrame"
     class="chat-iframe"
@@ -42,27 +40,26 @@
   ></iframe>
 
   <script>
-    // URL parameter localStorage
-    const params = new URLSearchParams(window.location.search)
-    const userId = params.get('userId') || localStorage.getItem('userId')
-    const username = params.get('username') || localStorage.getItem('username')
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId') || localStorage.getItem('userId');
+    const username = params.get('username') || localStorage.getItem('username');
     
-    // iframe account worker parameter
-    const frame = document.getElementById('chatFrame')
-    frame.src = `https://account.soeparnocorp.workers.dev?userId=${userId}&username=${encodeURIComponent(username)}`
+    if (!userId || !username) {
+      window.location.href = '/';
+    } else {
+      const frame = document.getElementById('chatFrame');
+      frame.src = `https://account.soeparnocorp.workers.dev?userId=${userId}&username=${encodeURIComponent(username)}`;
+      
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('username', username);
+    }
     
-    // next visit
-    if (userId) localStorage.setItem('userId', userId)
-    if (username) localStorage.setItem('username', username)
-    
-    // Listen iframe (optional)
     window.addEventListener('message', (event) => {
       if (event.data.type === 'LOGOUT') {
-        // Clear data dan redirect ke home
-        localStorage.clear()
-        window.location.href = '/'
+        localStorage.clear();
+        window.location.href = '/';
       }
-    })
+    });
   </script>
 </body>
 </html>
