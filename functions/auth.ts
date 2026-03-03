@@ -15,7 +15,7 @@ export async function onRequest(context: PagesFunctionContext) {
   const user = { id: "example-user-id", email: "user@example.com" }
 
   // Bisa redirect ke halaman after-login
-  const redirectAfterLogin = "/after-login.html"
+  const redirectAfterLogin = "/index.html"
 
   // Set cookie atau header sesuai kebutuhan (placeholder)
   const headers = new Headers({
