@@ -1,18 +1,12 @@
 // src/App.tsx
-import { useState } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [agreed, setAgreed] = useState(false)
-
   const handleAgree = () => {
-    // tandai bahwa user sudah klik Agree
-    setAgreed(true)
-    console.log('User agreed!')
-
-    // redirect ke halaman after-login (placeholder)
-    window.location.href = '/room.html'
+    // Placeholder: Pages Function akan handle OpenAuth internal
+    // Redirect ke halaman after-login
+    window.location.href = '/auth'
   }
 
   return (
