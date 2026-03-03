@@ -1,6 +1,4 @@
-// /functions/api/check-login.ts
-// Route: /api/check-login
-
+// functions/api/check-login.ts
 export async function onRequest(context) {
   const cookie = context.request.headers.get("Cookie") || "";
   const hasToken = cookie.includes("access_token=");
