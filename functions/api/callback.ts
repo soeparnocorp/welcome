@@ -1,6 +1,4 @@
-// /functions/api/callback.ts
-// Route: /api/callback?code=...
-
+// functions/api/callback.ts
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -10,35 +8,58 @@ export async function onRequest(context) {
     return new Response("No authorization code received", { status: 400 });
   }
 
-  // Exchange code manual (karena lib client bisa dipake, tapi ini versi simpel tanpa lib tambahan)
-  const tokenResponse = await fetch("https://openauth.soeparnocorp.workers.dev/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      grant_type: "authorization_code",
-      code,
-      redirect_uri: url.origin + "/api/callback",
-      client_id: "your-client-id", // sama seperti atas
-      // Kalau pake PKCE: code_verifier juga harus dikirim (tapi kalau ga pake PKCE, skip)
-    }),
-  });
+  try {
+    // 1. PAKE BINDING, BUKAN FETCH!
+    const tokenResp = await env.OPENAUTH.fetch('/token', {
+      method: 'POST',
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: url.origin + '/api/callback',
+        client_id: 'id-readtalk'
+      })
+    });
 
-  if (!tokenResponse.ok) {
-    const err = await tokenResponse.text();
-    return new Response("Token exchange failed: " + err, { status: 500 });
+    if (!tokenResp.ok) {
+      const err = await tokenResp.text();
+      return new Response("Token exchange failed: " + err, { status: 500 });
+    }
+
+    const tokens = await tokenResp.json();
+
+    // 2. Ambil user info (dapet userId)
+    const userResp = await env.OPENAUTH.fetch('/userinfo', {
+      headers: { 'Authorization': `Bearer ${tokens.access_token}` }
+    });
+
+    if (!userResp.ok) {
+      return new Response("Failed to get user info", { status: 500 });
+    }
+
+    const user = await userResp.json();
+    const userId = user.id;
+
+    // 3. Cek username di KV
+    const username = await env.PAGES_KV.get(`user:${userId}:name`);
+
+    // 4. Set cookie
+    const headers = new Headers();
+    headers.append(
+      "Set-Cookie",
+      `access_token=${tokens.access_token}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=3600`
+    );
+
+    // 5. Redirect sesuai kondisi
+    if (username) {
+      // UDAH PUNYA USERNAME → langsung ke account.html
+      return Response.redirect(`/account.html?userId=${userId}&username=${encodeURIComponent(username)}`, 302, { headers });
+    } else {
+      // BELUM PUNYA USERNAME → ke form
+      return Response.redirect(`/api/check-login?userId=${userId}`, 302, { headers });
+    }
+
+  } catch (error) {
+    console.error('Callback error:', error);
+    return new Response("Authentication failed", { status: 500 });
   }
-
-  const tokens = await tokenResponse.json();
-
-  // Simpen access_token di cookie (http-only lebih aman, tapi ini contoh simple)
-  const headers = new Headers();
-  headers.append(
-    "Set-Cookie",
-    `access_token=${tokens.access_token}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=3600`
-  );
-
-  // Redirect ke halaman account/protected
-  return Response.redirect("/account.html", 302, { headers });
 }
