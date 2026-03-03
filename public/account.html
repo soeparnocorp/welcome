@@ -1,17 +1,66 @@
+<!-- public/account.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Account Page</title>
+  <title>READTalk Chat</title>
   <style>
-    body { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
-    button { padding: 1rem 2rem; font-size: 1rem; cursor: pointer; }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .chat-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: system-ui;
+    }
   </style>
 </head>
 <body>
-  <div>
-    <h1>Login Successful!</h1>
-    <button onclick="window.location.href='/'">Logout</button>
-  </div>
+  <!-- Loading indicator -->
+  <div class="loading" id="loading">Loading chat...</div>
+  
+  <!-- Iframe yang memuat account worker -->
+  <iframe 
+    id="chatFrame"
+    class="chat-iframe"
+    src="about:blank"
+    onload="document.getElementById('loading').style.display='none'"
+    allow="camera; microphone"
+  ></iframe>
+
+  <script>
+    // Ambil data dari URL parameter atau localStorage
+    const params = new URLSearchParams(window.location.search)
+    const userId = params.get('userId') || localStorage.getItem('userId')
+    const username = params.get('username') || localStorage.getItem('username')
+    
+    // Set src iframe ke account worker dengan parameter
+    const frame = document.getElementById('chatFrame')
+    frame.src = `https://account.soeparnocorp.workers.dev?userId=${userId}&username=${encodeURIComponent(username)}`
+    
+    // Simpan untuk next visit
+    if (userId) localStorage.setItem('userId', userId)
+    if (username) localStorage.setItem('username', username)
+    
+    // Listen pesan dari iframe (optional)
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'LOGOUT') {
+        // Clear data dan redirect ke home
+        localStorage.clear()
+        window.location.href = '/'
+      }
+    })
+  </script>
 </body>
 </html>
