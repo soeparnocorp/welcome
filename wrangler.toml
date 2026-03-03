@@ -16,7 +16,7 @@ environment = "production"
 
 [[bindings]]
 type = "service_worker"
-name = "SETTINGS_WORKER"
+name = "ACCOUNT_WORKER"
 service = "account"
 environment = "production"
 
