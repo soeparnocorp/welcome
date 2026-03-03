@@ -8,28 +8,29 @@ command = "npm run build"
 upload.format = "service-worker"
 upload.dir = "dist"
 
-[[bindings]]
-type = "service_worker"
-name = "OPENAUTH_WORKER"
+# Service Pages Functions:
+[[services]]
+binding = "OPENAUTH"
 service = "openauth"
 environment = "production"
 
-[[bindings]]
-type = "service_worker"
-name = "ACCOUNT_WORKER"
+[[services]]
+binding = "ACCOUNT"
 service = "account"
 environment = "production"
 
+# D1 Database
 [[d1_databases]]
 binding = "PAGES_DB"
-name = "readtalk_db"
-id = "ff653b9c-4e2c-479d-8aa4-497da62de3c5"
+database_name = "readtalk_db"
+database_id = "ff653b9c-4e2c-479d-8aa4-497da62de3c5"
 
+# KV
 [[kv_namespaces]]
 binding = "PAGES_KV"
-name = "readtalk_kv"
 id = "13a468e30cc84fe58ff6297d799050f2"
 
+# R2
 [[r2_buckets]]
 binding = "PAGES_STORAGE"
-name = "readtalk-r2"
+bucket_name = "readtalk-r2"
