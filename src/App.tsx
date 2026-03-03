@@ -7,7 +7,6 @@ function App() {
 
   const handleAgree = () => {
     setIsLoading(true)
-    // Redirect ke pages function /auth yang akan meneruskan ke openauth
     window.location.href = '/api/login'
   }
 
