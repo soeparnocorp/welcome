@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../App.css';
-import './Settings.css';
+import './index.css';
 
 const SettingsPage: React.FC = () => {
   const [activeLayer, setActiveLayer] = useState('menu');
