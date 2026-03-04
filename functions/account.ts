@@ -24,7 +24,7 @@ export async function onRequest(context) {
     
     // Redirect ke account.html dengan data
     return Response.redirect(
-      `/account.html?userId=${user.id}&email=${encodeURIComponent(user.email)}`,
+      `/account?userId=${user.id}&email=${encodeURIComponent(user.email)}`,
       302
     );
   }
