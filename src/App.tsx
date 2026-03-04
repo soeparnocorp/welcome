@@ -17,7 +17,7 @@ function App() {
       console.log('Auto-detect: User returning from OpenAuth', { userId, email });
       
       // Redirect ke check-login dengan parameter yang sama
-      window.location.href = `/account?${window.location.search}`;
+      window.location.href = `/account${window.location.search}`;
     }
   }, []); // Kosong = jalan sekali pas component mount
 
