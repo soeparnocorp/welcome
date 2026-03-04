@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../App.css';
-import './Profile.css';
+import './index.css';
 
 const ProfilePage: React.FC = () => {
   const [profile, setProfile] = useState({
