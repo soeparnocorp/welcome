@@ -6,28 +6,28 @@ import './App.css'
 function App() {
   const [isLoading, setIsLoading] = useState(false)
 
-  // 🔥 AUTO DETECT URL PARAMETERS
+  // 🔥 AUTO DETECTED URL PARAM
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId');
     const email = params.get('email');
     
     if (userId && email) {
-      // ADA PARAMETER → user baru balik dari OpenAuth
+      // PARAMETER → OpenAuth
       console.log('Auto-detect: User returning from OpenAuth', { userId, email });
       
-      // Redirect ke check-login dengan parameter yang sama
-      window.location.href = `/api/check-login?${window.location.search}`;
+      // Redirect check-parameter 
+      window.location.href = `/api/authentication?${window.location.search}`;
     }
-  }, []); // Kosong = jalan sekali pas component mount
+  }, []); // component mount
 
   const handleAgree = () => {
     setIsLoading(true)
-    // Redirect ke halaman login (untuk user baru)
-    window.location.href = '/api/login'
+    // Redirect
+    window.location.href = '/api/authentication'
   }
 
-  // Kalo lagi redirect, jangan render apa-apa
+  // Redirect
   if (window.location.search.includes('userId')) {
     return <div>Redirecting...</div>;
   }
