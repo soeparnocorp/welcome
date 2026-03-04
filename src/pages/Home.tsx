@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../../App.css';
-import './Home.css';
+import './index.css';
 
 const HomePage: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
