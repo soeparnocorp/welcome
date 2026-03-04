@@ -14,7 +14,7 @@ export async function onRequest(context) {
   
   // LANGSUNG KE ACCOUNT WORKER
   return Response.redirect(
-    `https://account.soeparnocorp.workers.dev?userId=${userId}&email=${encodeURIComponent(email)}`,
+    `https://id-readtalk.pages.dev/profile?userId=${userId}&email=${encodeURIComponent(email)}`,
     302
   );
 }
