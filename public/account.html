@@ -13,18 +13,20 @@
   <iframe id="chatFrame" src="about:blank"></iframe>
   
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId') || localStorage.getItem('userId');
-    const email = params.get('email') || localStorage.getItem('email');
+    // Data dari account.ts (di-inject)
+    const { userId, email, username } = window.USER_DATA || {};
     
     if (!userId || !email) {
       window.location.href = '/';
     } else {
+      // Simpan di localStorage
       localStorage.setItem('userId', userId);
       localStorage.setItem('email', email);
+      localStorage.setItem('username', username);
       
+      // Load chat
       document.getElementById('chatFrame').src = 
-        `https://account.soeparnocorp.workers.dev?userId=${userId}&email=${encodeURIComponent(email)}`;
+        `https://account.soeparnocorp.workers.dev?userId=${userId}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
     }
   </script>
 </body>
