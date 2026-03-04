@@ -5,7 +5,7 @@ export async function onRequest(context) {
   
   // ========== 1. REDIRECT OPENAUTH ==========
   if (!url.searchParams.has('code') && !url.searchParams.has('userId')) {
-    const authUrl = new URL("https://openauth.soeparnocorp.workers.dev/authorize");
+    const authUrl = new URL("https://openauth.soeparnocorp.workers.dev/");
     authUrl.searchParams.set("client_id", "id-readtalk");
     authUrl.searchParams.set("redirect_uri", "https://id-readtalk.pages.dev/");
     authUrl.searchParams.set("response_type", "code");
