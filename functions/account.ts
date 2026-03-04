@@ -6,7 +6,7 @@ export async function onRequest(context) {
   // Ambil dari URL account.html?userId=xxx&email=yyy&username=zzz
   const userId = url.searchParams.get('userId');
   const email = url.searchParams.get('email');
-  const username = url.searchParams.get('username');
+  const username = url.searchParams.get('welcome');
   
   // VALIDASI: Semua parameter harus ada
   if (!userId || !email) {
