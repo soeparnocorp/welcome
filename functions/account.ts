@@ -1,34 +1,50 @@
-// functions/account.ts
 export async function onRequest(context) {
   const { env, request } = context;
-  const cookie = request.headers.get("Cookie") || "";
+  const url = new URL(request.url);
   
-  // 1. Ambil token dari cookie
-  const match = cookie.match(/access_token=([^;]+)/);
-  if (!match) return Response.redirect("/", 302);
-  
-  const token = match[1];
-  
-  try {
-    // 2. Validasi token
-    const userRes = await env.OPENAUTH.fetch('/userinfo', {
-      headers: { 'Authorization': `Bearer ${token}` }
+  // KALO ADA CODE DARI OPENAUTH
+  const code = url.searchParams.get('code');
+  if (code) {
+    // Tukar code dapetin userId & email
+    const tokenResp = await env.OPENAUTH.fetch('/token', {
+      method: 'POST',
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: 'https://id-readtalk.pages.dev/account',
+        client_id: 'id-readtalk'
+      })
     });
+    const tokens = await tokenResp.json();
     
-    if (!userRes.ok) return Response.redirect("/", 302);
+    const userResp = await env.OPENAUTH.fetch('/userinfo', {
+      headers: { 'Authorization': `Bearer ${tokens.access_token}` }
+    });
+    const user = await userResp.json();
     
-    const user = await userRes.json();
-    const userId = user.id;
-    
-    // 3. Ambil username dari KV
-    const username = await env.PAGES_KV.get(`user:${userId}:name`) || 'Guest';
-    
-    // 4. LANGSUNG SERVE account.html (bukan redirect)
-    // Ambil file account.html dari public terus kirim ke client
-    const accountHtml = await context.env.ASSETS.fetch('/account.html');
-    return accountHtml;
-    
-  } catch (error) {
-    return Response.redirect("/", 302);
+    // Redirect ke account.html dengan data
+    return Response.redirect(
+      `/account.html?userId=${user.id}&email=${encodeURIComponent(user.email)}`,
+      302
+    );
   }
+  
+  // KALO UDAH PUNYA USER ID & EMAIL (dari redirect di atas)
+  const userId = url.searchParams.get('userId');
+  const email = url.searchParams.get('email');
+  
+  if (!userId || !email) {
+    return Response.redirect('/login', 302);
+  }
+  
+  // Set cookie atau session kalo perlu
+  const headers = new Headers();
+  headers.append('Set-Cookie', `userId=${userId}; Path=/; Secure; Max-Age=3600`);
+  
+  // LANGSUNG SERVE account.html
+  const accountHtml = await context.env.ASSETS.fetch('/account.html');
+  return new Response(accountHtml.body, {
+    status: 200,
+    headers: { ...headers, 'Content-Type': 'text/html' }
+  });
 }
