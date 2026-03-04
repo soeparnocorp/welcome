@@ -1,13 +1,35 @@
-import { useState } from 'react'
+// App.tsx - dengan auto detect
+import { useState, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
 
+  // 🔥 AUTO DETECT URL PARAMETERS
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+    const email = params.get('email');
+    
+    if (userId && email) {
+      // ADA PARAMETER → user baru balik dari OpenAuth
+      console.log('Auto-detect: User returning from OpenAuth', { userId, email });
+      
+      // Redirect ke check-login dengan parameter yang sama
+      window.location.href = `/api/check-login?${window.location.search}`;
+    }
+  }, []); // Kosong = jalan sekali pas component mount
+
   const handleAgree = () => {
     setIsLoading(true)
+    // Redirect ke halaman login (untuk user baru)
     window.location.href = '/api/login'
+  }
+
+  // Kalo lagi redirect, jangan render apa-apa
+  if (window.location.search.includes('userId')) {
+    return <div>Redirecting...</div>;
   }
 
   return (
