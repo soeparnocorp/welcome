@@ -17,14 +17,14 @@ function App() {
       console.log('Auto-detect: User returning from OpenAuth', { userId, email });
       
       // Redirect check-parameter 
-      window.location.href = `/api/authentication?${window.location.search}`;
+      window.location.href = `/authentication?${window.location.search}`;
     }
   }, []); // component mount
 
   const handleAgree = () => {
     setIsLoading(true)
     // Redirect
-    window.location.href = '/api/authentication'
+    window.location.href = '/authentication'
   }
 
   // Redirect
