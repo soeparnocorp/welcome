@@ -24,7 +24,7 @@ function App() {
   const handleAgree = () => {
     setIsLoading(true)
     // Redirect ke halaman login (untuk user baru)
-    window.location.href = '/api/login'
+    window.location.href = '/api/log'
   }
 
   // Kalo lagi redirect, jangan render apa-apa
