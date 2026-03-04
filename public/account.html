@@ -5,61 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>READTalk</title>
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-    }
-    
-    .chat-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    
-    .loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: system-ui;
-    }
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
   </style>
 </head>
 <body>
-  <div class="loading" id="loading">Loading chat...</div>
+  <iframe id="chatFrame" src="about:blank"></iframe>
   
-  <iframe 
-    id="chatFrame"
-    class="chat-iframe"
-    src="about:blank"
-    onload="document.getElementById('loading').style.display='none'"
-    allow="camera; microphone"
-  ></iframe>
-
   <script>
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('userId') || localStorage.getItem('userId');
-    const username = params.get('username') || localStorage.getItem('username');
+    const email = params.get('email') || localStorage.getItem('email');
     
-    if (!userId || !username) {
+    if (!userId || !email) {
       window.location.href = '/';
     } else {
-      const frame = document.getElementById('chatFrame');
-      frame.src = `https://account.soeparnocorp.workers.dev?userId=${userId}&username=${encodeURIComponent(username)}`;
-      
       localStorage.setItem('userId', userId);
-      localStorage.setItem('username', username);
+      localStorage.setItem('email', email);
+      
+      document.getElementById('chatFrame').src = 
+        `https://account.soeparnocorp.workers.dev?userId=${userId}&email=${encodeURIComponent(email)}`;
     }
-    
-    window.addEventListener('message', (event) => {
-      if (event.data.type === 'LOGOUT') {
-        localStorage.clear();
-        window.location.href = '/';
-      }
-    });
   </script>
 </body>
 </html>
