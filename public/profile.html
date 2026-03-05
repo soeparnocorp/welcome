@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Account Settings</title>
+  <title>READTalk</title>
   <meta name="theme-color" content="#ff0000">
   <style>
     /* ===== VISUAL READTALK MERAH ===== */
@@ -78,6 +78,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 40px;
+      color: var(--text-secondary);
     }
     
     .upload-btn {
@@ -89,6 +91,7 @@
       cursor: pointer;
       display: block;
       margin: 0 auto;
+      font-weight: 600;
     }
     
     .info-box {
@@ -97,6 +100,14 @@
       border-radius: 12px;
       margin-bottom: 12px;
       font-family: monospace;
+      word-break: break-all;
+      border: 1px solid var(--border-color);
+    }
+    
+    .label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
     }
     
     .btn-group {
@@ -127,7 +138,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="app">
     <div class="header">
       <h1>⚡ READTalk</h1>
       <p>Account Settings</p>
@@ -147,28 +158,124 @@
     
     <div class="layer">
       <h2>⚙️ Account Info</h2>
-      <div class="info-box" id="userId"></div>
-      <div class="info-box" id="userEmail"></div>
-      <textarea id="aboutInput" rows="3" placeholder="About you..."></textarea>
+      <div class="label">User ID</div>
+      <div class="info-box" id="userIdDisplay"></div>
+      
+      <div class="label">Email</div>
+      <div class="info-box" id="emailDisplay"></div>
+      
+      <div class="label">About</div>
+      <textarea id="aboutInput" rows="4" placeholder="Tell something about yourself..."></textarea>
       
       <div class="btn-group">
-        <button class="btn-primary" id="saveBtn">Save</button>
-        <button class="btn-danger" id="deleteBtn">Delete</button>
+        <button class="btn-primary" id="saveBtn">Save Changes</button>
+        <button class="btn-danger" id="deleteBtn">Delete Account</button>
       </div>
     </div>
   </div>
-  
+
   <script>
+    // Ambil params dari URL
     const params = new URLSearchParams(location.search);
     const userId = params.get('userId');
     const email = params.get('email');
     const username = params.get('username') || '';
-    
-    document.getElementById('userId').textContent = userId;
-    document.getElementById('userEmail').textContent = email;
+
+    // Tampilkan data dasar
+    document.getElementById('userIdDisplay').textContent = userId || '-';
+    document.getElementById('emailDisplay').textContent = email || '-';
     document.getElementById('nameInput').value = username;
-    
-    // API calls, dll...
+
+    // Avatar upload
+    document.getElementById('uploadBtn').addEventListener('click', () => {
+      document.getElementById('avatarInput').click();
+    });
+
+    document.getElementById('avatarInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Load profile dari API
+    async function loadProfile() {
+      if (!userId || !email) return;
+      
+      try {
+        const res = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        
+        if (data.exists !== false && !data.error) {
+          document.getElementById('nameInput').value = data.name || username;
+          document.getElementById('aboutInput').value = data.about || '';
+          
+          if (data.avatar) {
+            document.getElementById('avatarPreview').innerHTML = `<img src="${data.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    }
+
+    // Save profile
+    async function saveProfile() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) return alert('Name is required');
+
+      const about = document.getElementById('aboutInput').value;
+      const avatarImg = document.querySelector('#avatarPreview img');
+      const avatar = avatarImg ? avatarImg.src : '';
+
+      try {
+        const check = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
+        const checkData = await check.json();
+        
+        let response;
+        if (checkData.exists === false || checkData.error) {
+          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identitas: userId, name, avatar, about })
+          });
+        } else {
+          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, avatar, about })
+          });
+        }
+        
+        const result = await response.json();
+        if (result.success) {
+          alert('Profile saved!');
+          localStorage.setItem('username', name);
+        } else {
+          alert('Error: ' + (result.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Failed to save:', err);
+        alert('Failed to save profile');
+      }
+    }
+
+    // Delete account
+    async function deleteAccount() {
+      if (!confirm('Delete account? This cannot be undone.')) return;
+      alert('Delete endpoint not implemented');
+    }
+
+    // Event listeners
+    document.getElementById('saveBtn').addEventListener('click', saveProfile);
+    document.getElementById('deleteBtn').addEventListener('click', deleteAccount);
+
+    // Load profile
+    loadProfile();
   </script>
 </body>
 </html>
