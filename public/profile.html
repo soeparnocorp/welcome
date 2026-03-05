@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>READTalk Account</title>
+  <title>READTalk</title>
   <meta name="theme-color" content="#ff0000">
   
-  <!-- AMBIL CSS DARI READTALK (yang merah) -->
   <style>
+    /* ===== SISTEM IFRAME YANG DIPERTAHANKAN ===== */
+    body, html { 
+      margin: 0; 
+      padding: 0; 
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+    
+    /* ===== VISUAL READTALK MERAH ===== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -38,86 +46,87 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
       padding: 20px;
     }
 
-    /* HEADER - READTalk Red */
-    .account-header {
-      background-color: var(--readtalk);
-      color: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .account-header h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-
-    .account-header p {
-      opacity: 0.9;
-      font-size: 14px;
-    }
-
-    .account-container {
+    .profile-container {
       max-width: 500px;
       margin: 0 auto;
     }
 
-    .layer {
-      background-color: var(--bg-secondary);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-color);
+    /* HEADER READTALK */
+    .readtalk-header {
+      background-color: var(--readtalk);
+      color: white;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(255,0,0,0.2);
     }
 
-    .layer h2 {
-      color: var(--readtalk);
-      font-size: 18px;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
+    .readtalk-header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--text-secondary);
+    .readtalk-header p {
+      opacity: 0.9;
       font-size: 14px;
     }
 
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
+    /* LAYER CARDS */
+    .layer-card {
+      background-color: var(--bg-secondary);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
       border: 1px solid var(--border-color);
-      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .layer-title {
+      color: var(--readtalk);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* FORM ELEMENTS */
+    .input-field {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 30px;
       background-color: var(--bg-primary);
       color: var(--text-primary);
       font-size: 16px;
+      transition: all 0.2s;
     }
 
-    .form-group input:focus,
-    .form-group textarea:focus {
+    .input-field:focus {
       outline: none;
       border-color: var(--readtalk);
+      box-shadow: 0 0 0 3px rgba(255,0,0,0.1);
     }
 
-    /* Avatar upload */
-    .avatar-container {
+    textarea.input-field {
+      border-radius: 20px;
+      resize: vertical;
+    }
+
+    /* AVATAR */
+    .avatar-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 20px;
+      gap: 16px;
     }
 
     .avatar-preview {
@@ -127,10 +136,10 @@
       background-color: var(--bg-primary);
       border: 3px solid var(--readtalk);
       overflow: hidden;
-      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 12px rgba(255,0,0,0.2);
     }
 
     .avatar-preview img {
@@ -141,269 +150,398 @@
 
     .avatar-preview .placeholder {
       color: var(--text-secondary);
-      font-size: 40px;
+      font-size: 48px;
     }
 
     .upload-btn {
       background-color: var(--readtalk);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 20px;
+      padding: 14px 28px;
+      border-radius: 40px;
       font-weight: 600;
+      font-size: 15px;
       cursor: pointer;
-      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
     }
 
     .upload-btn:hover {
-      opacity: 0.9;
+      background-color: var(--readtalk-dark);
+      transform: scale(1.02);
     }
 
-    /* Buttons */
+    /* INFO BOXES */
+    .info-box {
+      background-color: var(--bg-primary);
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      word-break: break-all;
+      font-family: monospace;
+    }
+
+    /* BUTTONS */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-primary, .btn-danger {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
     .btn-primary {
       background-color: var(--readtalk);
       color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--readtalk-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,0,0,0.3);
     }
 
     .btn-danger {
       background-color: transparent;
       color: #f44336;
       border: 1px solid #f44336;
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
     }
 
-    .info-box {
-      background-color: var(--bg-primary);
-      padding: 12px;
-      border-radius: 8px;
-      font-family: monospace;
-      word-break: break-all;
-      margin-bottom: 10px;
+    .btn-danger:hover {
+      background-color: rgba(244,67,54,0.05);
+      transform: translateY(-2px);
     }
 
-    /* Dark mode toggle (dari READTalk) */
+    /* DARK MODE TOGGLE */
     .theme-toggle {
       position: fixed;
       top: 20px;
       right: 20px;
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
-      border-radius: 30px;
-      padding: 8px 16px;
+      border-radius: 40px;
+      padding: 12px 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       z-index: 100;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* STATUS MESSAGE */
+    .status-message {
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status-success {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .status-error {
+      background-color: #f44336;
+      color: white;
+    }
+
+    /* MISSING INFO PAGE */
+    .missing-info {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .missing-info h2 {
+      color: var(--readtalk);
+      margin-bottom: 16px;
+    }
+
+    .missing-info p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .missing-info a {
+      color: var(--readtalk);
+      text-decoration: none;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <div class="theme-toggle" id="theme-toggle">
+  <div class="theme-toggle" id="themeToggle">
     <span>🌓</span>
     <span>Day/Night</span>
   </div>
 
-  <div class="account-container">
-    <!-- HEADER -->
-    <div class="account-header">
-      <h1>READTalk Account</h1>
-      <p>Manage your profile and settings</p>
-    </div>
-
-    <!-- LAYER 1: YOUR NAME -->
-    <div class="layer">
-      <h2>Your Name</h2>
-      <div class="form-group">
-        <label for="display-name">Display Name</label>
-        <input type="text" id="display-name" placeholder="Enter your name" maxlength="32">
-      </div>
-    </div>
-
-    <!-- LAYER 2: UPLOAD AVATAR -->
-    <div class="layer">
-      <h2>Profile Picture</h2>
-      <div class="avatar-container">
-        <div class="avatar-preview" id="avatarPreview">
-          <span class="placeholder">👤</span>
-        </div>
-        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-        <button class="upload-btn" id="uploadBtn">Choose Image</button>
-      </div>
-    </div>
-
-    <!-- LAYER 3: ACCOUNT MANAGEMENT -->
-    <div class="layer">
-      <h2>Account Management</h2>
-      
-      <div class="form-group">
-        <label>User ID</label>
-        <div class="info-box" id="userId"></div>
-      </div>
-      
-      <div class="form-group">
-        <label>Email</label>
-        <div class="info-box" id="userEmail"></div>
-      </div>
-      
-      <div class="form-group">
-        <label for="about">About</label>
-        <textarea id="about" rows="3" placeholder="Tell something about yourself"></textarea>
-      </div>
-      
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button class="btn-primary" id="saveProfile">Save Changes</button>
-        <button class="btn-danger" id="deleteAccount">Delete Account</button>
-      </div>
-    </div>
-  </div>
+  <div id="statusMessage" class="status-message"></div>
+  <div id="mainContent"></div>
 
   <script>
-    // ===== AMBIL PARAMS DARI URL =====
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('userId');
-    const email = urlParams.get('email');
-    const username = urlParams.get('username') || '';
+    (function() {
+      // ============================================
+      // SISTEM 1: BACA PARAMS (PERSIS SEPERTI IFRAME)
+      // ============================================
+      const params = new URLSearchParams(window.location.search);
+      let userId = params.get('userId');
+      let email = params.get('email');
+      let username = params.get('username') || 'Guest';
 
-    // Redirect if no params
-    if (!userId || !email) {
-      window.location.href = '/';
-    }
-
-    // ===== DARK MODE (dari READTalk) =====
-    let isDarkMode = localStorage.getItem('dark_mode') === 'true';
-    if (isDarkMode) {
-      document.body.classList.add('dark-mode');
-    }
-
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      isDarkMode = !isDarkMode;
-      document.body.classList.toggle('dark-mode', isDarkMode);
-      localStorage.setItem('dark_mode', isDarkMode);
-    });
-
-    // ===== DISPLAY USER INFO =====
-    document.getElementById('userId').textContent = userId;
-    document.getElementById('userEmail').textContent = email;
-    document.getElementById('display-name').value = username;
-
-    // ===== AVATAR UPLOAD =====
-    document.getElementById('uploadBtn').addEventListener('click', () => {
-      document.getElementById('avatarInput').click();
-    });
-
-    document.getElementById('avatarInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const preview = document.getElementById('avatarPreview');
-          preview.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    // ===== LOAD PROFILE FROM API =====
-    async function loadProfile() {
-      try {
-        const response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
-        const data = await response.json();
-        
-        if (data.exists !== false && !data.error) {
-          document.getElementById('display-name').value = data.name || username;
-          document.getElementById('about').value = data.about || '';
-          
-          if (data.avatar) {
-            const preview = document.getElementById('avatarPreview');
-            preview.innerHTML = `<img src="${data.avatar}" alt="Avatar">`;
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load profile:', err);
-      }
-    }
-
-    // ===== SAVE PROFILE =====
-    async function saveProfile() {
-      const name = document.getElementById('display-name').value;
-      const about = document.getElementById('about').value;
-      
-      // Get avatar as base64 if uploaded
-      let avatar = '';
-      const avatarImg = document.querySelector('#avatarPreview img');
-      if (avatarImg) {
-        avatar = avatarImg.src;
-      }
-
-      try {
-        // Check if user exists
-        const checkResponse = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
-        const checkData = await checkResponse.json();
-        
-        let response;
-        if (checkData.exists === false || checkData.error) {
-          // New user
-          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              identitas: userId,
-              name,
-              avatar,
-              about
-            })
-          });
-        } else {
-          // Existing user
-          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, avatar, about })
-          });
-        }
-        
-        const result = await response.json();
-        if (result.success) {
-          alert('Profile saved successfully!');
-          localStorage.setItem('username', name);
-        } else {
-          alert('Error: ' + (result.error || 'Unknown error'));
-        }
-      } catch (err) {
-        console.error('Failed to save profile:', err);
-        alert('Failed to save profile');
-      }
-    }
-
-    // ===== DELETE ACCOUNT =====
-    async function deleteAccount() {
-      if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      // ============================================
+      // SISTEM 2: CEK VALIDASI (PERSIS SEPERTI IFRAME)
+      // ============================================
+      if (!userId || !email) {
+        document.getElementById('mainContent').innerHTML = `
+          <div class="missing-info">
+            <h2>Missing Login Information</h2>
+            <p>Please login first.</p>
+            <a href="/">Go to Home</a>
+          </div>
+        `;
         return;
       }
-      
-      // Implement delete logic here (you need a DELETE endpoint)
-      alert('Delete functionality - implement endpoint first');
-    }
 
-    // ===== EVENT LISTENERS =====
-    document.getElementById('saveProfile').addEventListener('click', saveProfile);
-    document.getElementById('deleteAccount').addEventListener('click', deleteAccount);
+      // ============================================
+      // SISTEM 3: SIMPAN KE LOCALSTORAGE (PERSIS SEPERTI IFRAME)
+      // ============================================
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      localStorage.setItem('username', username);
 
-    // Load profile on page load
-    loadProfile();
+      // ============================================
+      // SISTEM 4: TAMPILKAN UI (MENGGANTIKAN IFRAME)
+      // ============================================
+      document.getElementById('mainContent').innerHTML = `
+        <div class="profile-container">
+          <!-- HEADER -->
+          <div class="readtalk-header">
+            <h1>⚡ READTalk</h1>
+            <p>Account Settings</p>
+          </div>
+
+          <!-- LAYER 1: YOUR NAME -->
+          <div class="layer-card">
+            <div class="layer-title">
+              <span>👤</span> Your Name
+            </div>
+            <input type="text" id="displayName" class="input-field" placeholder="Enter your name" maxlength="32" value="${username}">
+          </div>
+
+          <!-- LAYER 2: PROFILE PICTURE -->
+          <div class="layer-card">
+            <div class="layer-title">
+              <span>🖼️</span> Profile Picture
+            </div>
+            <div class="avatar-section">
+              <div class="avatar-preview" id="avatarPreview">
+                <span class="placeholder">👤</span>
+              </div>
+              <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+              <button class="upload-btn" id="uploadBtn">
+                <span>📁</span> Choose Image
+              </button>
+            </div>
+          </div>
+
+          <!-- LAYER 3: ACCOUNT MANAGEMENT -->
+          <div class="layer-card">
+            <div class="layer-title">
+              <span>⚙️</span> Account Management
+            </div>
+            
+            <div class="info-box">
+              <div class="info-label">User ID</div>
+              <div class="info-value" id="userId">${userId}</div>
+            </div>
+            
+            <div class="info-box">
+              <div class="info-label">Email</div>
+              <div class="info-value" id="userEmail">${email}</div>
+            </div>
+            
+            <textarea id="about" class="input-field" rows="4" placeholder="Tell something about yourself..."></textarea>
+            
+            <div class="button-group">
+              <button class="btn-primary" id="saveBtn">
+                <span>💾</span> Save
+              </button>
+              <button class="btn-danger" id="deleteBtn">
+                <span>🗑️</span> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // ============================================
+      // SISTEM TAMBAHAN: DARK MODE
+      // ============================================
+      let isDarkMode = localStorage.getItem('dark_mode') === 'true';
+      if (isDarkMode) document.body.classList.add('dark-mode');
+
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        localStorage.setItem('dark_mode', isDarkMode);
+      });
+
+      // ============================================
+      // FUNGSI: SHOW STATUS
+      // ============================================
+      function showStatus(message, type) {
+        const statusEl = document.getElementById('statusMessage');
+        statusEl.textContent = message;
+        statusEl.className = `status-message status-${type}`;
+        statusEl.style.display = 'block';
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+        }, 3000);
+      }
+
+      // ============================================
+      // AVATAR UPLOAD
+      // ============================================
+      document.getElementById('uploadBtn')?.addEventListener('click', () => {
+        document.getElementById('avatarInput').click();
+      });
+
+      document.getElementById('avatarInput')?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // ============================================
+      // LOAD PROFILE
+      // ============================================
+      async function loadProfile() {
+        try {
+          const res = await fetch(\`/api/user/\${userId}?email=\${encodeURIComponent(email)}\`);
+          const data = await res.json();
+          
+          if (data.exists !== false && !data.error) {
+            document.getElementById('displayName').value = data.name || username;
+            document.getElementById('about').value = data.about || '';
+            
+            if (data.avatar) {
+              document.getElementById('avatarPreview').innerHTML = `<img src="${data.avatar}" alt="Avatar">`;
+            }
+          }
+        } catch (err) {
+          console.error('Failed to load profile:', err);
+        }
+      }
+
+      // ============================================
+      // SAVE PROFILE
+      // ============================================
+      async function saveProfile() {
+        const name = document.getElementById('displayName').value.trim();
+        if (!name) {
+          showStatus('Name is required', 'error');
+          return;
+        }
+
+        const about = document.getElementById('about').value;
+        const avatarImg = document.querySelector('#avatarPreview img');
+        const avatar = avatarImg ? avatarImg.src : '';
+
+        try {
+          showStatus('Saving...', 'success');
+          
+          const check = await fetch(\`/api/user/\${userId}?email=\${encodeURIComponent(email)}\`);
+          const checkData = await check.json();
+          
+          let response;
+          if (checkData.exists === false || checkData.error) {
+            response = await fetch(\`/api/user/\${userId}?email=\${encodeURIComponent(email)}\`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                identitas: userId, 
+                name, 
+                avatar, 
+                about 
+              })
+            });
+          } else {
+            response = await fetch(\`/api/user/\${userId}?email=\${encodeURIComponent(email)}\`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, avatar, about })
+            });
+          }
+          
+          const result = await response.json();
+          if (result.success) {
+            showStatus('Profile saved!', 'success');
+            localStorage.setItem('username', name);
+          } else {
+            showStatus('Error: ' + (result.error || 'Unknown error'), 'error');
+          }
+        } catch (err) {
+          console.error('Failed to save:', err);
+          showStatus('Failed to save profile', 'error');
+        }
+      }
+
+      // ============================================
+      // DELETE ACCOUNT
+      // ============================================
+      async function deleteAccount() {
+        if (!confirm('Delete account? This cannot be undone.')) return;
+        showStatus('Delete endpoint not implemented', 'error');
+      }
+
+      // ============================================
+      // EVENT LISTENERS
+      // ============================================
+      document.getElementById('saveBtn')?.addEventListener('click', saveProfile);
+      document.getElementById('deleteBtn')?.addEventListener('click', deleteAccount);
+
+      // ============================================
+      // LOAD PROFILE
+      // ============================================
+      loadProfile();
+    })();
   </script>
 </body>
 </html>
