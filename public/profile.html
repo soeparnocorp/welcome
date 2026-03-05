@@ -1,281 +1,667 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>READTalk</title>
+  <title>READTalk UI</title>
   <meta name="theme-color" content="#ff0000">
   <style>
-    /* ===== VISUAL READTALK MERAH ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+    /* ===== AMBIL 100% CSS DARI FILE ASLI ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
       --readtalk: #ff0000;
       --readtalk-dark: #cc0000;
+      --readtalk-light: #ff3333;
+      --readtalk-bg: #fff0f0;
       --bg-primary: #ffffff;
       --bg-secondary: #f5f5f5;
       --text-primary: #333333;
       --text-secondary: #666666;
       --border-color: #e0e0e0;
+      --roster-bg: #f8f9fa;
+      --online-color: #4caf50;
+      --offline-color: #9e9e9e;
+      --header-bg: #ff0000;
+      --hover-color: #fff0f0;
     }
-    
+
+    body.dark-mode {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border-color: #404040;
+      --roster-bg: #252525;
+      --header-bg: #cc0000;
+      --hover-color: #332222;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      padding: 20px;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color 0.3s, color 0.3s;
     }
-    
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    
-    .header {
-      background: var(--readtalk);
-      color: white;
-      padding: 24px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    
-    .layer {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .layer h2 {
-      color: var(--readtalk);
-      font-size: 18px;
-      margin-bottom: 16px;
+
+    /* HEADER */
+    #app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background-color: var(--header-bg);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
       display: flex;
       align-items: center;
-      gap: 8px;
+      padding: 0 16px;
+      z-index: 100;
+      transition: background-color 0.3s;
     }
-    
-    input, textarea {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 16px;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+
+    #header-title {
+      flex: 1;
+      font-weight: 600;
+      font-size: 18px;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    
-    .avatar-preview {
-      width: 100px;
-      height: 100px;
+
+    #header-menu {
+      position: relative;
+    }
+
+    #menu-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px;
+      color: white;
       border-radius: 50%;
-      background: var(--bg-primary);
-      border: 3px solid var(--readtalk);
-      margin: 0 auto 16px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 40px;
-      color: var(--text-secondary);
     }
-    
-    .upload-btn {
-      background: var(--readtalk);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 30px;
-      cursor: pointer;
-      display: block;
-      margin: 0 auto;
-      font-weight: 600;
+
+    #menu-button:hover {
+      background-color: #cc0000;
     }
-    
-    .info-box {
-      background: var(--bg-primary);
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-family: monospace;
-      word-break: break-all;
+
+    #menu-dropdown {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      background-color: var(--bg-primary);
       border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      min-width: 200px;
+      z-index: 1000;
     }
-    
-    .label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 4px;
+
+    #menu-dropdown.show {
+      display: block;
     }
-    
-    .btn-group {
+
+    .menu-item {
+      padding: 12px 16px;
+      cursor: pointer;
       display: flex;
+      align-items: center;
       gap: 12px;
-      margin-top: 20px;
+      color: var(--text-primary);
     }
-    
-    .btn-primary, .btn-danger {
-      flex: 1;
-      padding: 14px;
+
+    .menu-item:hover {
+      background-color: var(--hover-color);
+    }
+
+    /* BACK BUTTON */
+    #back-button {
+      display: none;
+      background: none;
       border: none;
-      border-radius: 30px;
+      font-size: 20px;
+      cursor: pointer;
+      margin-right: 12px;
+      color: white;
+      padding: 4px 8px;
+    }
+
+    #back-button:hover {
+      background-color: #cc0000;
+      border-radius: 4px;
+    }
+
+    /* MAIN CONTAINER */
+    #main-container {
+      position: fixed;
+      top: 48px;
+      bottom: 48px;
+      left: 0;
+      right: 0;
+      display: flex;
+    }
+
+    /* ROSTER */
+    #roster {
+      width: 30%;
+      background-color: var(--roster-bg);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      padding: 12px;
+      transition: background-color 0.3s;
+    }
+
+    .roster-header {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .roster-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .roster-item:hover {
+      background-color: var(--hover-color);
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+
+    .status-online {
+      background-color: var(--online-color);
+      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    }
+
+    .status-offline {
+      background-color: var(--offline-color);
+    }
+
+    .roster-name {
+      flex: 1;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    /* CHATLOG */
+    #chatlog {
+      width: 70%;
+      overflow-y: auto;
+      padding: 16px;
+      background-color: var(--bg-primary);
+      transition: background-color 0.3s;
+    }
+
+    .chat-message {
+      margin-bottom: 12px;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-message .username {
+      font-weight: 600;
+      color: #ff0000;
+      margin-right: 8px;
+    }
+
+    .chat-message .timestamp {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+
+    .chat-message .message-content {
+      color: var(--text-primary);
+      word-break: break-word;
+      margin-top: 4px;
+      padding-left: 8px;
+      border-left: 2px solid #ff0000;
+    }
+
+    .system-message {
+      color: var(--text-secondary);
+      font-style: italic;
+      font-size: 13px;
+      text-align: center;
+      margin: 16px 0;
+      padding: 8px;
+      background-color: var(--hover-color);
+      border-radius: 8px;
+    }
+
+    /* CHAT INPUT */
+    #chat-input-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background-color: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      transition: background-color 0.3s;
+    }
+
+    #chat-input {
+      flex: 1;
+      height: 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 0 16px;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #chat-input:focus {
+      border-color: #ff0000;
+    }
+
+    #send-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #ff0000;
+      padding: 8px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #send-button:hover {
+      background-color: var(--hover-color);
+      color: #cc0000;
+    }
+
+    /* STATUS BAR */
+    #connection-status {
+      position: fixed;
+      top: 48px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--online-color);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+      z-index: 1000;
+    }
+
+    #connection-status.reconnecting {
+      background-color: #ff9800;
+      transform: scaleX(1);
+      animation: pulse 1s infinite;
+    }
+
+    #connection-status.offline {
+      background-color: #f44336;
+      transform: scaleX(1);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* FORMS */
+    #room-form, #name-form {
+      position: fixed;
+      z-index: 200;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .form-content {
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .form-content h2 {
+      margin-bottom: 24px;
+      color: #ff0000;
+    }
+
+    .form-content input {
+      width: 100%;
+      height: 48px;
+      border: 2px solid var(--border-color);
+      border-radius: 24px;
+      padding: 0 20px;
+      font-size: 16px;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .form-content input:focus {
+      border-color: #ff0000;
+      outline: none;
+    }
+
+    .form-content button {
+      height: 48px;
+      border: none;
+      border-radius: 24px;
+      padding: 0 32px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: opacity 0.2s;
     }
-    
-    .btn-primary {
-      background: var(--readtalk);
+
+    #go-public, #go-private, #join-chat {
+      background-color: #ff0000;
       color: white;
     }
-    
-    .btn-danger {
-      background: transparent;
-      color: #f44336;
-      border: 1px solid #f44336;
+
+    .form-content button:hover {
+      opacity: 0.9;
+    }
+
+    .or-divider {
+      margin: 24px 0;
+      color: var(--text-secondary);
+      position: relative;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 45%;
+      height: 1px;
+      background-color: var(--border-color);
+    }
+
+    .or-divider::before { left: 0; }
+    .or-divider::after { right: 0; }
+
+    /* MODAL */
+    #settings-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--bg-primary);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 1000;
+      min-width: 300px;
+    }
+
+    .modal-header {
+      font-weight: 600;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+      color: #ff0000;
+    }
+
+    .modal-content p {
+      margin: 12px 0;
+      color: var(--text-secondary);
+    }
+
+    #close-settings {
+      width: 100%;
+      height: 40px;
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    #close-settings:hover {
+      background-color: #cc0000;
+    }
+
+    /* SMARTPHONE STYLES */
+    @media (max-width: 600px) {
+      #main-container {
+        flex-direction: column;
+      }
+      
+      #roster {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      
+      #chatlog {
+        width: 100%;
+        height: 100%;
+        display: none;
+      }
+      
+      #back-button {
+        display: block;
+      }
+      
+      #chat-input-container {
+        display: none;
+      }
+      
+      .roster-item {
+        padding: 12px 16px;
+      }
+      
+      body.chat-active #roster {
+        display: none;
+      }
+      
+      body.chat-active #chatlog {
+        display: block;
+      }
+      
+      body.chat-active #chat-input-container {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 601px) {
+      #back-button {
+        display: none !important;
+      }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ff0000;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #cc0000;
+    }
+
+    a {
+      color: #ff0000;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="app">
-    <div class="header">
-      <h1>⚡ READTalk</h1>
-      <p>Account Settings</p>
+  <!-- CONNECTION STATUS BAR -->
+  <div id="connection-status" class="connected"></div>
+
+  <!-- HEADER -->
+  <header id="app-header">
+    <button id="back-button">←</button>
+    <div id="header-title">READTalk</div>
+    <div id="header-menu">
+      <button id="menu-button">⋮</button>
+      <div id="menu-dropdown" class="show">
+        <div class="menu-item" id="theme-toggle">
+          <span>🌓</span>
+          <span>Day/Night Mode</span>
+        </div>
+        <div class="menu-item" id="show-settings">
+          <span>⚙️</span>
+          <span>Settings</span>
+        </div>
+      </div>
     </div>
-    
-    <div class="layer">
-      <h2>👤 Your Name</h2>
-      <input type="text" id="nameInput" placeholder="Enter your name">
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <div id="main-container">
+    <!-- ROSTER -->
+    <div id="roster">
+      <div class="roster-header">Participants • <span id="participant-count">3</span> online</div>
+      <div id="roster-list">
+        <div class="roster-item">
+          <div class="status-indicator status-online"></div>
+          <span class="roster-name">Alice</span>
+        </div>
+        <div class="roster-item">
+          <div class="status-indicator status-online"></div>
+          <span class="roster-name">Bob</span>
+        </div>
+        <div class="roster-item">
+          <div class="status-indicator status-offline"></div>
+          <span class="roster-name">Charlie</span>
+        </div>
+      </div>
     </div>
-    
-    <div class="layer">
-      <h2>🖼️ Profile Picture</h2>
-      <div class="avatar-preview" id="avatarPreview">👤</div>
-      <input type="file" id="avatarInput" accept="image/*" hidden>
-      <button class="upload-btn" id="uploadBtn">Choose Image</button>
-    </div>
-    
-    <div class="layer">
-      <h2>⚙️ Account Info</h2>
-      <div class="label">User ID</div>
-      <div class="info-box" id="userIdDisplay"></div>
-      
-      <div class="label">Email</div>
-      <div class="info-box" id="emailDisplay"></div>
-      
-      <div class="label">About</div>
-      <textarea id="aboutInput" rows="4" placeholder="Tell something about yourself..."></textarea>
-      
-      <div class="btn-group">
-        <button class="btn-primary" id="saveBtn">Save Changes</button>
-        <button class="btn-danger" id="deleteBtn">Delete Account</button>
+
+    <!-- CHATLOG -->
+    <div id="chatlog">
+      <div id="messages">
+        <div class="chat-message">
+          <span class="username">Alice</span>
+          <span class="timestamp">14:30</span>
+          <div class="message-content">Hello everyone!</div>
+        </div>
+        <div class="system-message">Bob joined the chat</div>
+        <div class="chat-message">
+          <span class="username">Bob</span>
+          <span class="timestamp">14:31</span>
+          <div class="message-content">Hi Alice!</div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- CHAT INPUT -->
+  <div id="chat-input-container">
+    <input type="text" id="chat-input" placeholder="Type a message..." value="This is a sample message">
+    <button id="send-button">➤</button>
+  </div>
+
+  <!-- ROOM FORM (hidden) -->
+  <div id="room-form" style="display: none;">
+    <!-- isi form -->
+  </div>
+
+  <!-- NAME FORM (hidden) -->
+  <div id="name-form" style="display: none;">
+    <!-- isi form -->
+  </div>
+
+  <!-- SETTINGS MODAL (hidden) -->
+  <div id="settings-modal" style="display: none;">
+    <div class="modal-header">Settings</div>
+    <div class="modal-content">
+      <p>Device ID: <span id="device-id">device_12345</span></p>
+      <p>Connection: <span id="connection-state">Connected</span></p>
+      <p>Room: <span id="current-room">general</span></p>
+    </div>
+    <button id="close-settings">Close</button>
+  </div>
+
+  <!-- Simple dark mode toggle (UI only) -->
   <script>
-    // Ambil params dari URL
-    const params = new URLSearchParams(location.search);
-    const userId = params.get('userId');
-    const email = params.get('email');
-    const username = params.get('username') || '';
-
-    // Tampilkan data dasar
-    document.getElementById('userIdDisplay').textContent = userId || '-';
-    document.getElementById('emailDisplay').textContent = email || '-';
-    document.getElementById('nameInput').value = username;
-
-    // Avatar upload
-    document.getElementById('uploadBtn').addEventListener('click', () => {
-      document.getElementById('avatarInput').click();
+    // Dark mode toggle - UI ONLY (tanpa mengganggu sistem lain)
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
     });
-
-    document.getElementById('avatarInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          document.getElementById('avatarPreview').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
-        };
-        reader.readAsDataURL(file);
-      }
+    
+    // Menu dropdown toggle
+    document.getElementById('menu-button').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('menu-dropdown').classList.toggle('show');
     });
-
-    // Load profile dari API
-    async function loadProfile() {
-      if (!userId || !email) return;
-      
-      try {
-        const res = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
-        const data = await res.json();
-        
-        if (data.exists !== false && !data.error) {
-          document.getElementById('nameInput').value = data.name || username;
-          document.getElementById('aboutInput').value = data.about || '';
-          
-          if (data.avatar) {
-            document.getElementById('avatarPreview').innerHTML = `<img src="${data.avatar}" style="width:100%; height:100%; object-fit:cover;">`;
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load profile:', err);
-      }
-    }
-
-    // Save profile
-    async function saveProfile() {
-      const name = document.getElementById('nameInput').value.trim();
-      if (!name) return alert('Name is required');
-
-      const about = document.getElementById('aboutInput').value;
-      const avatarImg = document.querySelector('#avatarPreview img');
-      const avatar = avatarImg ? avatarImg.src : '';
-
-      try {
-        const check = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`);
-        const checkData = await check.json();
-        
-        let response;
-        if (checkData.exists === false || checkData.error) {
-          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identitas: userId, name, avatar, about })
-          });
-        } else {
-          response = await fetch(`/api/user/${userId}?email=${encodeURIComponent(email)}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, avatar, about })
-          });
-        }
-        
-        const result = await response.json();
-        if (result.success) {
-          alert('Profile saved!');
-          localStorage.setItem('username', name);
-        } else {
-          alert('Error: ' + (result.error || 'Unknown error'));
-        }
-      } catch (err) {
-        console.error('Failed to save:', err);
-        alert('Failed to save profile');
-      }
-    }
-
-    // Delete account
-    async function deleteAccount() {
-      if (!confirm('Delete account? This cannot be undone.')) return;
-      alert('Delete endpoint not implemented');
-    }
-
-    // Event listeners
-    document.getElementById('saveBtn').addEventListener('click', saveProfile);
-    document.getElementById('deleteBtn').addEventListener('click', deleteAccount);
-
-    // Load profile
-    loadProfile();
+    
+    document.addEventListener('click', () => {
+      document.getElementById('menu-dropdown').classList.remove('show');
+    });
+    
+    // Settings modal
+    document.getElementById('show-settings').addEventListener('click', () => {
+      document.getElementById('settings-modal').style.display = 'block';
+      document.getElementById('menu-dropdown').classList.remove('show');
+    });
+    
+    document.getElementById('close-settings').addEventListener('click', () => {
+      document.getElementById('settings-modal').style.display = 'none';
+    });
   </script>
 </body>
 </html>
