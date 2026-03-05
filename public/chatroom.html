@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>READTalk - Chatroom</title>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: transparent; }
+    iframe { width: 100%; height: 100%; border: none; background-color: transparent; }
+  </style>
+</head>
+<body>
+  <iframe id="chatFrame" src="about:blank" allow="camera; microphone"></iframe>
+  
+  <script>    
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId');
+    const email = params.get('email');
+    const username = params.get('username') || 'Guest';
+        
+    if (!userId || !email) {      
+      document.body.innerHTML = `
+        <div style="padding:20px; text-align:center;">
+          <h2>Missing Login Information</h2>
+          <p>Please <a href="/api/login">login</a> first.</p>
+        </div>
+      `;
+    } else {      
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      localStorage.setItem('username', username);
+      
+      document.getElementById('chatFrame').src = 
+        `https://account.soeparnocorp.workers.dev?userId=${userId}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
+    }
+  </script>
+</body>
+</html>
