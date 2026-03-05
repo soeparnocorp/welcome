@@ -6,7 +6,7 @@ account_id = "53d61c09062b1ca11788fa763f79313a"
 [build]
 command = "npm run build"
 upload.format = "service-worker"
-upload.dir = "dist"
+upload.dir = "/dist"
 
 # Service Pages Functions:
 [[services]]
