@@ -1,4 +1,3 @@
-// App.tsx - dengan auto detect
 import { useState, useEffect } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
