@@ -2,10 +2,10 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>READTalk</title>
+  <title>READTalk - Profile</title>
   <meta name="theme-color" content="#ff0000">
   <style>
-    /* CSS */
+    /* CSS LENGKAP (sama seperti yang lo kasih) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -62,7 +62,6 @@
       align-items: center;
       padding: 0 16px;
       z-index: 100;
-      transition: background-color 0.3s;
     }
 
     #header-title {
@@ -70,67 +69,9 @@
       font-weight: 600;
       font-size: 18px;
       color: white;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    #header-menu {
-      position: relative;
-    }
-
-    #menu-button {
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      padding: 8px;
-      color: white;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #menu-button:hover {
-      background-color: #cc0000;
-    }
-
-    #menu-dropdown {
-      position: absolute;
-      top: 48px;
-      right: 0;
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: none;
-      min-width: 200px;
-      z-index: 1000;
-    }
-
-    #menu-dropdown.show {
-      display: block;
-    }
-
-    .menu-item {
-      padding: 12px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-primary);
-    }
-
-    .menu-item:hover {
-      background-color: var(--hover-color);
-    }
-
-    /* BACK BUTTON */
     #back-button {
-      display: none;
       background: none;
       border: none;
       font-size: 20px;
@@ -145,501 +86,210 @@
       border-radius: 4px;
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN CONTENT */
     #main-container {
       position: fixed;
       top: 48px;
-      bottom: 48px;
-      left: 0;
-      right: 0;
-      display: flex;
-    }
-
-    /* ROSTER */
-    #roster {
-      width: 30%;
-      background-color: var(--roster-bg);
-      border-right: 1px solid var(--border-color);
-      overflow-y: auto;
-      padding: 12px;
-      transition: background-color 0.3s;
-    }
-
-    .roster-header {
-      font-size: 12px;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .roster-item {
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
-      margin-bottom: 4px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .roster-item:hover {
-      background-color: var(--hover-color);
-    }
-
-    .status-indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 12px;
-    }
-
-    .status-online {
-      background-color: var(--online-color);
-      box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-    }
-
-    .status-offline {
-      background-color: var(--offline-color);
-    }
-
-    .roster-name {
-      flex: 1;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    /* CHATLOG */
-    #chatlog {
-      width: 70%;
-      overflow-y: auto;
-      padding: 16px;
-      background-color: var(--bg-primary);
-      transition: background-color 0.3s;
-    }
-
-    .chat-message {
-      margin-bottom: 12px;
-      animation: fadeIn 0.3s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .chat-message .username {
-      font-weight: 600;
-      color: #ff0000;
-      margin-right: 8px;
-    }
-
-    .chat-message .timestamp {
-      font-size: 11px;
-      color: var(--text-secondary);
-      margin-left: 8px;
-    }
-
-    .chat-message .message-content {
-      color: var(--text-primary);
-      word-break: break-word;
-      margin-top: 4px;
-      padding-left: 8px;
-      border-left: 2px solid #ff0000;
-    }
-
-    .system-message {
-      color: var(--text-secondary);
-      font-style: italic;
-      font-size: 13px;
-      text-align: center;
-      margin: 16px 0;
-      padding: 8px;
-      background-color: var(--hover-color);
-      border-radius: 8px;
-    }
-
-    /* CHAT INPUT */
-    #chat-input-container {
-      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 48px;
-      background-color: var(--bg-primary);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      gap: 12px;
-      transition: background-color 0.3s;
-    }
-
-    #chat-input {
-      flex: 1;
-      height: 36px;
-      border: 1px solid var(--border-color);
-      border-radius: 18px;
-      padding: 0 16px;
-      background-color: var(--bg-secondary);
-      color: var(--text-primary);
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-
-    #chat-input:focus {
-      border-color: #ff0000;
-    }
-
-    #send-button {
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #ff0000;
-      padding: 8px;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #send-button:hover {
-      background-color: var(--hover-color);
-      color: #cc0000;
-    }
-
-    /* STATUS BAR */
-    #connection-status {
-      position: fixed;
-      top: 48px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background-color: var(--online-color);
-      transform: scaleX(0);
-      transition: transform 0.3s;
-      z-index: 1000;
-    }
-
-    #connection-status.reconnecting {
-      background-color: #ff9800;
-      transform: scaleX(1);
-      animation: pulse 1s infinite;
-    }
-
-    #connection-status.offline {
-      background-color: #f44336;
-      transform: scaleX(1);
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-
-    /* FORMS */
-    #room-form, #name-form {
-      position: fixed;
-      z-index: 200;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: var(--bg-primary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      overflow-y: auto;
       padding: 20px;
     }
 
-    .form-content {
-      max-width: 400px;
-      width: 100%;
+    .profile-header {
       text-align: center;
+      margin-bottom: 30px;
     }
 
-    .form-content h2 {
-      margin-bottom: 24px;
-      color: #ff0000;
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      background-color: var(--readtalk-light);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
     }
 
-    .form-content input {
-      width: 100%;
-      height: 48px;
-      border: 2px solid var(--border-color);
-      border-radius: 24px;
-      padding: 0 20px;
-      font-size: 16px;
+    .profile-name {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .profile-email {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .profile-section {
       background-color: var(--bg-secondary);
-      color: var(--text-primary);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-weight: 600;
       margin-bottom: 16px;
+      color: var(--readtalk);
     }
 
-    .form-content input:focus {
-      border-color: #ff0000;
-      outline: none;
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .form-content button {
-      height: 48px;
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+    }
+
+    .info-value {
+      font-weight: 500;
+    }
+
+    .edit-button {
+      background-color: var(--readtalk);
+      color: white;
       border: none;
+      padding: 12px 24px;
       border-radius: 24px;
-      padding: 0 32px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    #go-public, #go-private, #join-chat {
-      background-color: #ff0000;
-      color: white;
-    }
-
-    .form-content button:hover {
-      opacity: 0.9;
-    }
-
-    .or-divider {
-      margin: 24px 0;
-      color: var(--text-secondary);
-      position: relative;
-    }
-
-    .or-divider::before,
-    .or-divider::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 45%;
-      height: 1px;
-      background-color: var(--border-color);
-    }
-
-    .or-divider::before { left: 0; }
-    .or-divider::after { right: 0; }
-
-    /* MODAL */
-    #settings-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: var(--bg-primary);
-      padding: 24px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      z-index: 1000;
-      min-width: 300px;
-    }
-
-    .modal-header {
-      font-weight: 600;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
-      color: #ff0000;
-    }
-
-    .modal-content p {
-      margin: 12px 0;
-      color: var(--text-secondary);
-    }
-
-    #close-settings {
       width: 100%;
-      height: 40px;
-      background-color: #ff0000;
+      margin-top: 20px;
+    }
+
+    .edit-button:hover {
+      background-color: var(--readtalk-dark);
+    }
+
+    /* DARK MODE TOGGLE */
+    #theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      background-color: var(--readtalk);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-weight: 600;
+      border-radius: 50%;
       cursor: pointer;
-      margin-top: 16px;
-    }
-
-    #close-settings:hover {
-      background-color: #cc0000;
-    }
-
-    /* SMARTPHONE STYLES */
-    @media (max-width: 600px) {
-      #main-container {
-        flex-direction: column;
-      }
-      
-      #roster {
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
-      
-      #chatlog {
-        width: 100%;
-        height: 100%;
-        display: none;
-      }
-      
-      #back-button {
-        display: block;
-      }
-      
-      #chat-input-container {
-        display: none;
-      }
-      
-      .roster-item {
-        padding: 12px 16px;
-      }
-      
-      body.chat-active #roster {
-        display: none;
-      }
-      
-      body.chat-active #chatlog {
-        display: block;
-      }
-      
-      body.chat-active #chat-input-container {
-        display: flex;
-      }
-    }
-
-    @media (min-width: 601px) {
-      #back-button {
-        display: none !important;
-      }
-    }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg-secondary);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #ff0000;
-      border-radius: 3px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #cc0000;
-    }
-
-    a {
-      color: #ff0000;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
+      font-size: 20px;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-  <!-- CONNECTION STATUS BAR - DUMMY -->
-  <div id="connection-status" class="connected"></div>
-
   <!-- HEADER -->
   <header id="app-header">
-    <button id="back-button">←</button>
-    <div id="header-title">READTalk</div>
-    <div id="header-menu">
-      <button id="menu-button">⋮</button>
-      <div id="menu-dropdown">
-        <div class="menu-item" id="theme-toggle">
-          <span>🌓</span>
-          <span>Day/Night Mode</span>
-        </div>
-        <div class="menu-item" id="show-settings">
-          <span>⚙️</span>
-          <span>Settings</span>
-        </div>
-      </div>
-    </div>
+    <button id="back-button" onclick="history.back()">←</button>
+    <div id="header-title">Profile Settings</div>
   </header>
 
-  <!-- MAIN CONTAINER -->
+  <!-- MAIN CONTENT -->
   <div id="main-container">
-    <!-- ROSTER -->
-    <div id="roster">
-      <div class="roster-header">Participants • <span id="participant-count">3</span> online</div>
-      <div id="roster-list">
-        <div class="roster-item">
-          <div class="status-indicator status-online"></div>
-          <span class="roster-name">Alice</span>
-        </div>
-        <div class="roster-item">
-          <div class="status-indicator status-online"></div>
-          <span class="roster-name">Bob</span>
-        </div>
-        <div class="roster-item">
-          <div class="status-indicator status-offline"></div>
-          <span class="roster-name">Charlie</span>
-        </div>
+    <div class="profile-header">
+      <div class="profile-avatar" id="avatarDisplay">👤</div>
+      <div class="profile-name" id="displayName">Loading...</div>
+      <div class="profile-email" id="displayEmail"></div>
+    </div>
+
+    <div class="profile-section">
+      <div class="section-title">Personal Information</div>
+      <div class="info-row">
+        <span class="info-label">Display Name</span>
+        <span class="info-value" id="infoName">-</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value" id="infoEmail">-</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Member Since</span>
+        <span class="info-value" id="infoJoined">-</span>
       </div>
     </div>
 
-    <!-- CHATLOG -->
-    <div id="chatlog">
-      <div id="messages">
-        <div class="chat-message">
-          <span class="username">Alice</span>
-          <span class="timestamp">14:30</span>
-          <div class="message-content">Hello everyone!</div>
-        </div>
-        <div class="system-message">Bob joined the chat</div>
-        <div class="chat-message">
-          <span class="username">Bob</span>
-          <span class="timestamp">14:31</span>
-          <div class="message-content">Hi Alice!</div>
-        </div>
+    <div class="profile-section">
+      <div class="section-title">Account Settings</div>
+      <div class="info-row" onclick="alert('Edit profile coming soon')">
+        <span class="info-label">Edit Profile</span>
+        <span class="info-value">→</span>
+      </div>
+      <div class="info-row" onclick="alert('Change password coming soon')">
+        <span class="info-label">Change Password</span>
+        <span class="info-value">→</span>
+      </div>
+      <div class="info-row" onclick="alert('Privacy settings coming soon')">
+        <span class="info-label">Privacy</span>
+        <span class="info-value">→</span>
       </div>
     </div>
+
+    <button class="edit-button" onclick="alert('Edit mode coming soon')">
+      Edit Profile
+    </button>
   </div>
 
-  <!-- CHAT INPUT -->
-  <div id="chat-input-container">
-    <input type="text" id="chat-input" placeholder="Type a message...">
-    <button id="send-button">➤</button>
-  </div>
+  <!-- DARK MODE TOGGLE -->
+  <button id="theme-toggle" onclick="document.body.classList.toggle('dark-mode')">🌓</button>
 
-  <!-- ROOM FORM (DUMMY) -->
-  <div id="room-form" style="display: none;"></div>
-
-  <!-- NAME FORM (DUMMY) -->
-  <div id="name-form" style="display: none;"></div>
-
-  <!-- SETTINGS MODAL (HIDDEN) -->
-  <div id="settings-modal" style="display: none;"></div>
-
-  <!-- SIMPLE UI TOGGLE - DEMO -->
   <script>
-    // Dark mode toggle (UI only)
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-    });
-
-    // Menu dropdown
-    document.getElementById('menu-button').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('menu-dropdown').classList.toggle('show');
-    });
-
-    document.addEventListener('click', () => {
-      document.getElementById('menu-dropdown').classList.remove('show');
-    });
+    // ========== SISTEM RESPON LINK ==========
+    (function() {
+      // AMBIL PARAMETER DARI URL
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get('userId');
+      const email = params.get('email');
+      const username = params.get('username') || 'Guest';
+      
+      // CEK PARAMETER - BLOK TANPA PARAMETER!
+      if (!userId || !email) {
+        document.body.innerHTML = `
+          <div style="padding:20px; text-align:center; margin-top:50px;">
+            <h2>Missing Login Information</h2>
+            <p>Please <a href="/api/login">login</a> first.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // SIMPAN DI LOCALSTORAGE
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      localStorage.setItem('username', username);
+      
+      // TAMPILKAN DATA
+      document.getElementById('displayName').textContent = username;
+      document.getElementById('displayEmail').textContent = email;
+      document.getElementById('infoName').textContent = username;
+      document.getElementById('infoEmail').textContent = email;
+      
+      // AMBIL DATA TAMBAHAN (MEMBER SINCE, DLL) DARI KV/API
+      fetch(`/api/user-data?userId=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.joined) {
+            document.getElementById('infoJoined').textContent = new Date(data.joined).toLocaleDateString('id-ID');
+          }
+        })
+        .catch(() => {
+          document.getElementById('infoJoined').textContent = 'Recently';
+        });
+    })();
   </script>
 </body>
 </html>
