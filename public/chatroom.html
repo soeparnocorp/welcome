@@ -1,0 +1,32 @@
+<!-- Ini adalah file https://account.soeparnocorp.workers.dev (index.html Anda) 
+     dengan tambahan listener postMessage -->
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- ... semua CSS dan HTML Anda ... -->
+</head>
+<body>
+  <!-- ... semua elemen Anda ... -->
+  
+  <script>
+    // ... semua kode Anda ...
+    
+    // TAMBAHKAN INI
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://id-readtalk.pages.dev') return;
+      
+      if (event.data.type === 'CREATE_ROOM') {
+        document.getElementById('room-name').value = event.data.roomName;
+        document.getElementById('go-public').click();
+        
+        event.source.postMessage({
+          type: 'ROOM_CREATED',
+          roomName: event.data.roomName
+        }, event.origin);
+      }
+    });
+    
+    // ... sisa kode Anda ...
+  </script>
+</body>
+</html>
