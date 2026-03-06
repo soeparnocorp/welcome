@@ -13,10 +13,9 @@
   <iframe id="chatFrame" src="about:blank" allow="camera; microphone"></iframe>
   
   <script>    
-    // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId');        // "12345"
-    const email = params.get('email');          // "user@mail.com"
+    const userId = params.get('userId');
+    const email = params.get('email');
     const username = params.get('username') || email?.split('@')[0] || 'Guest';
     
     if (!userId || !email) {      
@@ -24,32 +23,55 @@
       throw new Error('Access denied');
     }
     
-    // Simpan di localStorage profile
     localStorage.setItem('userId', userId);
     localStorage.setItem('email', email);
     localStorage.setItem('username', username);
     
     const iframe = document.getElementById('chatFrame');
     
-    // Kirim ke iframe dengan parameter userId (angka)
+    // Set iframe src
     iframe.src = `https://account.soeparnocorp.workers.dev?userId=${encodeURIComponent(userId)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
     
-    // AUTO CREATE ROOM DARI userId (bukan parameter room)
+    // TUNGGU IFRAME SIAP, BARU KIRIM PERINTAH
+    let messageSent = false;
+    
     iframe.onload = () => {
+      // Kirim PROFILE_READY dulu
+      iframe.contentWindow.postMessage({
+        type: 'PROFILE_READY',
+        userId: userId,
+        username: username
+      }, 'https://account.soeparnocorp.workers.dev');
+      
+      // Tunggu sebentar, lalu kirim CREATE_USER_ROOM
       setTimeout(() => {
-        iframe.contentWindow.postMessage({
-          type: 'CREATE_USER_ROOM',
-          userId: userId  // Kirim userId angka
-        }, 'https://account.soeparnocorp.workers.dev');
-      }, 1500);
+        if (!messageSent) {
+          messageSent = true;
+          iframe.contentWindow.postMessage({
+            type: 'CREATE_USER_ROOM',
+            userId: userId
+          }, 'https://account.soeparnocorp.workers.dev');
+        }
+      }, 2000); // Kasih waktu index.html siap
     };
     
-    // Terima konfirmasi dari chatroom
+    // Terima konfirmasi
     window.addEventListener('message', (event) => {
       if (event.origin !== 'https://account.soeparnocorp.workers.dev') return;
       
       if (event.data.type === 'USER_ROOM_CREATED') {
         console.log(`✅ User room created: user${event.data.userId}`);
+      }
+      
+      if (event.data.type === 'READY_FOR_ROOM') {
+        // Index.html siap, kirim sekarang
+        if (!messageSent) {
+          messageSent = true;
+          iframe.contentWindow.postMessage({
+            type: 'CREATE_USER_ROOM',
+            userId: userId
+          }, 'https://account.soeparnocorp.workers.dev');
+        }
       }
     });
   </script>
