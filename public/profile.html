@@ -11,9 +11,10 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       height: 100vh;
       overflow: hidden;
+      background: white;
     }
     
-    /* LAYER 1: FORM CREATE ROOM (saja) */
+    /* LAYER 1: FORM CREATE ROOM */
     #layer1 {
       position: fixed;
       top: 0;
@@ -26,7 +27,7 @@
       align-items: center;
       justify-content: center;
       z-index: 200;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s ease;
       padding: 20px;
     }
     
@@ -35,51 +36,73 @@
       pointer-events: none;
     }
     
-    .form-content {
+    .form-container {
       max-width: 400px;
       width: 100%;
       text-align: center;
-    }
-    
-    .form-content h2 {
-      margin-bottom: 24px;
-      color: #ff0000;
-    }
-    
-    .form-content input {
-      width: 100%;
-      height: 48px;
-      border: 2px solid #e0e0e0;
+      background: white;
+      padding: 40px 20px;
       border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .form-container h1 {
+      color: #ff0000;
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    
+    .form-container h2 {
+      color: #333;
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 30px;
+    }
+    
+    .form-container input {
+      width: 100%;
+      height: 52px;
+      border: 2px solid #e0e0e0;
+      border-radius: 26px;
       padding: 0 20px;
       font-size: 16px;
-      background: #f5f5f5;
-      margin-bottom: 16px;
+      background: #f8f8f8;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
     }
     
-    .form-content input:focus {
+    .form-container input:focus {
       border-color: #ff0000;
       outline: none;
+      background: white;
     }
     
-    .form-content button {
-      height: 48px;
+    .form-container button {
+      width: 100%;
+      height: 52px;
       border: none;
-      border-radius: 24px;
+      border-radius: 26px;
       padding: 0 32px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       background: #ff0000;
       color: white;
-      width: 100%;
+      transition: background 0.3s;
+      margin-bottom: 20px;
     }
     
-    .form-content button:hover {
+    .form-container button:hover {
       background: #cc0000;
     }
     
-    /* LAYER 2: IFRAME (index.html) */
+    .form-container .info {
+      color: #666;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    
+    /* LAYER 2: IFRAME (chatroom) */
     #layer2 {
       position: fixed;
       top: 0;
@@ -94,16 +117,42 @@
       height: 100%;
       border: none;
     }
+    
+    /* ROOM INFO (opsional) */
+    .room-info {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.9);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #333;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 300;
+      display: none;
+    }
+    
+    .room-info.visible {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <!-- LAYER 1: FORM CREATE ROOM (saja) -->
+  <!-- ROOM INFO (tampil jika ada room aktif) -->
+  <div class="room-info" id="roomInfo">
+    <span>🏠 Room: <span id="currentRoom">-</span></span>
+  </div>
+  
+  <!-- LAYER 1: FORM CREATE ROOM -->
   <div id="layer1">
-    <div class="form-content">
-      <h2>Create Room</h2>
-      <input type="text" id="room-name" placeholder="Room Name..." maxlength="14">
+    <div class="form-container">
+      <h1>READTalk</h1>
+      <h2>Buat Room Baru</h2>
+      <input type="text" id="room-name" placeholder="Nama room..." maxlength="14" autofocus>
       <button id="create-room">✨ Buat Room</button>
-      <p style="margin-top: 20px; color: #666; font-size: 12px;">Setelah room dibuat, silakan isi nama di chat</p>
+      <p class="info">Setelah room dibuat, silakan isi nama kamu di chat</p>
+      <p class="info" style="margin-top: 10px;">Room terakhir: <span id="lastRoomDisplay">-</span></p>
     </div>
   </div>
   
@@ -113,79 +162,152 @@
   </div>
   
   <script>
-    // Ambil parameter dari URL
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId');
-    const email = params.get('email');
-    const username = params.get('username') || email?.split('@')[0] || 'Guest';
-    
-    if (!userId || !email) {
-      document.body.innerHTML = `<div style="padding:20px; text-align:center;"><h2>⛔ Missing Login Information</h2></div>`;
-      throw new Error('Access denied');
-    }
-    
-    // Simpan data user di localStorage profile
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('email', email);
-    localStorage.setItem('username', username);
-    
-    const layer1 = document.getElementById('layer1');
-    const layer2 = document.getElementById('layer2');
-    const iframe = document.getElementById('chatFrame');
-    const roomInput = document.getElementById('room-name');
-    const createBtn = document.getElementById('create-room');
-    
-    // Cek apakah sudah pernah buat room
-    const savedRoom = localStorage.getItem('profile_room');
-    
-    if (savedRoom) {
-      // Langsung ke layer 2
-      layer1.classList.add('hidden');
-      loadChatroom(userId, email, username, savedRoom);
-    }
-    
-    // Event create room
-    createBtn.addEventListener('click', () => {
-      const room = roomInput.value.trim();
+    (function() {
+      // ==================== KONFIGURASI ====================
+      const CHATROOM_URL = 'https://account.soeparnocorp.workers.dev';
+      const PARENT_ORIGIN = 'https://id-readtalk.pages.dev';
       
-      if (!room) {
-        alert('Nama room harus diisi');
-        return;
+      // ==================== BACA PARAMETER ====================
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get('userId');
+      const email = params.get('email');
+      const username = params.get('username') || (email ? email.split('@')[0] : 'Guest');
+      const autoRoom = params.get('room'); // Optional: room dari parameter
+      
+      // Validasi parameter login
+      if (!userId || !email) {
+        document.body.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center;">
+            <div>
+              <h2 style="color: #ff0000; margin-bottom: 20px;">⛔ Akses Ditolak</h2>
+              <p style="color: #666;">Halaman ini memerlukan parameter login yang valid.</p>
+            </div>
+          </div>
+        `;
+        throw new Error('Access denied - missing parameters');
       }
       
-      // Simpan room di localStorage profile
-      localStorage.setItem('profile_room', room);
+      // ==================== LOCAL STORAGE ====================
+      // Simpan data user (tetap, tidak berubah)
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      localStorage.setItem('username', username);
       
-      // Sembunyikan form
-      layer1.classList.add('hidden');
+      // Cek apakah sudah pernah buat room sebelumnya
+      const savedRoom = localStorage.getItem('profile_room');
       
-      // Muat chatroom
-      loadChatroom(userId, email, username, room);
-    });
-    
-    function loadChatroom(userId, email, username, room) {
-      // Set iframe src dengan parameter (user data)
-      iframe.src = `https://account.soeparnocorp.workers.dev?userId=${encodeURIComponent(userId)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
+      // ==================== ELEMEN DOM ====================
+      const layer1 = document.getElementById('layer1');
+      const layer2 = document.getElementById('layer2');
+      const iframe = document.getElementById('chatFrame');
+      const roomInput = document.getElementById('room-name');
+      const createBtn = document.getElementById('create-room');
+      const roomInfo = document.getElementById('roomInfo');
+      const currentRoomSpan = document.getElementById('currentRoom');
+      const lastRoomDisplay = document.getElementById('lastRoomDisplay');
       
-      // Kirim perintah buka room setelah iframe load
-      iframe.onload = () => {
-        setTimeout(() => {
+      // Tampilkan room terakhir jika ada
+      if (savedRoom) {
+        lastRoomDisplay.textContent = savedRoom;
+        roomInput.placeholder = `Nama room (terakhir: ${savedRoom})`;
+      }
+      
+      // ==================== FUNGSI UTAMA ====================
+      function loadChatroom(roomName) {
+        // Simpan room ke localStorage
+        localStorage.setItem('profile_room', roomName);
+        
+        // Update tampilan
+        lastRoomDisplay.textContent = roomName;
+        currentRoomSpan.textContent = roomName;
+        roomInfo.classList.add('visible');
+        
+        // Set iframe src dengan parameter user
+        iframe.src = `${CHATROOM_URL}?userId=${encodeURIComponent(userId)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
+        
+        // Kirim perintah buka room setelah iframe load
+        iframe.onload = function() {
+          setTimeout(function() {
+            iframe.contentWindow.postMessage({
+              type: 'OPEN_ROOM',
+              roomName: roomName,
+              userId: userId
+            }, CHATROOM_URL);
+          }, 1500); // Kasih waktu chatroom siap
+        };
+        
+        // Sembunyikan form
+        layer1.classList.add('hidden');
+      }
+      
+      // ==================== AUTO CREATE (PWA LANGSUNG) ====================
+      if (savedRoom) {
+        // Jika sudah punya room tersimpan, langsung buka tanpa form
+        loadChatroom(savedRoom);
+      } else if (autoRoom) {
+        // Jika ada parameter room, simpan dan buka
+        loadChatroom(autoRoom);
+      }
+      // else: tampilkan form (default)
+      
+      // ==================== EVENT CREATE ROOM ====================
+      createBtn.addEventListener('click', function() {
+        const room = roomInput.value.trim();
+        
+        if (!room) {
+          alert('Nama room harus diisi');
+          roomInput.focus();
+          return;
+        }
+        
+        if (room.length > 14) {
+          alert('Nama room maksimal 14 karakter');
+          return;
+        }
+        
+        loadChatroom(room);
+      });
+      
+      // Enter key pada input
+      roomInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          createBtn.click();
+        }
+      });
+      
+      // ==================== TERIMA PESAN DARI CHATROOM ====================
+      window.addEventListener('message', function(event) {
+        // Validasi origin
+        if (event.origin !== CHATROOM_URL) return;
+        
+        const data = event.data;
+        
+        if (data.type === 'ROOM_OPENED') {
+          console.log('✅ Room berhasil dibuka:', data.roomName);
+        }
+        
+        if (data.type === 'USER_JOINED') {
+          console.log('👤 User join:', data.username);
+        }
+        
+        if (data.type === 'ERROR') {
+          console.error('❌ Error dari chatroom:', data.message);
+          // Jika error, tampilkan form lagi
+          layer1.classList.remove('hidden');
+        }
+      });
+      
+      // ==================== CLEANUP ====================
+      window.addEventListener('beforeunload', function() {
+        // Optional: kirim sinyal ke chatroom jika perlu
+        if (iframe.contentWindow) {
           iframe.contentWindow.postMessage({
-            type: 'OPEN_ROOM',
-            roomName: room
-          }, 'https://account.soeparnocorp.workers.dev');
-        }, 1500);
-      };
-    }
-    
-    // Terima pesan dari chatroom
-    window.addEventListener('message', (event) => {
-      if (event.origin !== 'https://account.soeparnocorp.workers.dev') return;
+            type: 'PROFILE_UNLOAD'
+          }, CHATROOM_URL);
+        }
+      });
       
-      if (event.data.type === 'ROOM_OPENED') {
-        console.log('✅ Room opened:', event.data.roomName);
-      }
-    });
+    })();
   </script>
 </body>
 </html>
