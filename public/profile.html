@@ -5,73 +5,235 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>READTalk</title>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    iframe { width: 100%; height: 100%; border: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* LAYER 1: Form Utama (fullscreen) */
+    #layer1 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    #layer1.hidden {
+      transform: translateY(-100%);
+    }
+    
+    .form-container {
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      padding: 40px 20px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .form-container h1 {
+      color: #ff0000;
+      margin-bottom: 30px;
+    }
+    
+    .form-container input {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 30px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    .form-container input:focus {
+      border-color: #ff0000;
+      outline: none;
+    }
+    
+    .form-container button {
+      width: 100%;
+      padding: 15px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 10px 0;
+      transition: background 0.3s;
+    }
+    
+    .form-container button:hover {
+      background: #cc0000;
+    }
+    
+    /* LAYER 2: Chatroom (iframe) */
+    #layer2 {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+    
+    #layer2 iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .toggle-profile {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 300;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .toggle-profile.visible {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <iframe id="chatFrame" src="about:blank" allow="camera; microphone"></iframe>
+  <!-- LAYER 1: Form Profile -->
+  <div id="layer1">
+    <div class="form-container">
+      <h1>READTalk</h1>
+      <input type="text" id="nameInput" placeholder="Nama kamu" maxlength="32">
+      <input type="text" id="roomInput" placeholder="Nama room" maxlength="32">
+      <button id="saveBtn">💾 Simpan & Buka Chat</button>
+      <p style="color: #666; font-size: 12px; margin-top: 20px;">Data akan disimpan di localStorage</p>
+    </div>
+  </div>
   
-  <script>    
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId');
-    const email = params.get('email');
-    const username = params.get('username') || email?.split('@')[0] || 'Guest';
+  <!-- LAYER 2: Chatroom (iframe) -->
+  <div id="layer2">
+    <iframe id="chatFrame" src="about:blank" allow="camera; microphone"></iframe>
+  </div>
+  
+  <!-- Tombol kembali ke profile -->
+  <button class="toggle-profile" id="toggleProfile">👤</button>
+  
+  <script>
+    // Cek localStorage
+    const savedName = localStorage.getItem('profile_name');
+    const savedRoom = localStorage.getItem('profile_room');
+    const savedUserId = localStorage.getItem('userId');
+    const savedEmail = localStorage.getItem('email');
     
-    if (!userId || !email) {      
-      document.body.innerHTML = `<div style="padding:20px; text-align:center;"><h2>⛔ Missing Login Information</h2><p>Please <a href="/api/login">login</a> first.</p></div>`;
-      throw new Error('Access denied');
-    }
-    
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('email', email);
-    localStorage.setItem('username', username);
-    
+    const layer1 = document.getElementById('layer1');
+    const layer2 = document.getElementById('layer2');
+    const toggleBtn = document.getElementById('toggleProfile');
+    const nameInput = document.getElementById('nameInput');
+    const roomInput = document.getElementById('roomInput');
+    const saveBtn = document.getElementById('saveBtn');
     const iframe = document.getElementById('chatFrame');
     
-    // Set iframe src
-    iframe.src = `https://account.soeparnocorp.workers.dev?userId=${encodeURIComponent(userId)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(username)}`;
-    
-    // TUNGGU IFRAME SIAP, BARU KIRIM PERINTAH
-    let messageSent = false;
-    
-    iframe.onload = () => {
-      // Kirim PROFILE_READY dulu
-      iframe.contentWindow.postMessage({
-        type: 'PROFILE_READY',
-        userId: userId,
-        username: username
-      }, 'https://account.soeparnocorp.workers.dev');
+    // Jika sudah ada data, langsung sembunyikan form
+    if (savedName && savedRoom && savedUserId && savedEmail) {
+      layer1.classList.add('hidden');
+      toggleBtn.classList.add('visible');
       
-      // Tunggu sebentar, lalu kirim CREATE_USER_ROOM
-      setTimeout(() => {
-        if (!messageSent) {
-          messageSent = true;
-          iframe.contentWindow.postMessage({
-            type: 'CREATE_USER_ROOM',
-            userId: userId
-          }, 'https://account.soeparnocorp.workers.dev');
-        }
-      }, 2000); // Kasih waktu index.html siap
-    };
+      // Muat chatroom dengan parameter
+      loadChatroom(savedUserId, savedEmail, savedName, savedRoom);
+    } else {
+      // Tampilkan form
+      layer1.classList.remove('hidden');
+      
+      // Isi form dengan data yang ada (jika sebagian ada)
+      if (savedName) nameInput.value = savedName;
+      if (savedRoom) roomInput.value = savedRoom;
+    }
     
-    // Terima konfirmasi
+    // Tombol kembali ke profile
+    toggleBtn.addEventListener('click', () => {
+      layer1.classList.remove('hidden');
+      toggleBtn.classList.remove('visible');
+    });
+    
+    // Simpan form
+    saveBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const room = roomInput.value.trim();
+      
+      if (!name || !room) {
+        alert('Nama dan room harus diisi');
+        return;
+      }
+      
+      // Ambil parameter dari URL (userId dan email)
+      const params = new URLSearchParams(window.location.search);
+      const userId = params.get('userId');
+      const email = params.get('email');
+      
+      if (!userId || !email) {
+        alert('Missing login parameters');
+        return;
+      }
+      
+      // Simpan di localStorage
+      localStorage.setItem('profile_name', name);
+      localStorage.setItem('profile_room', room);
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      
+      // Sembunyikan form
+      layer1.classList.add('hidden');
+      toggleBtn.classList.add('visible');
+      
+      // Muat chatroom
+      loadChatroom(userId, email, name, room);
+    });
+    
+    function loadChatroom(userId, email, name, room) {
+      // Kirim ke iframe dengan parameter
+      iframe.src = `https://account.soeparnocorp.workers.dev?userId=${encodeURIComponent(userId)}&email=${encodeURIComponent(email)}&username=${encodeURIComponent(name)}`;
+      
+      // Setelah iframe load, kirim perintah buat room
+      iframe.onload = () => {
+        setTimeout(() => {
+          iframe.contentWindow.postMessage({
+            type: 'CREATE_ROOM',
+            roomName: room
+          }, 'https://account.soeparnocorp.workers.dev');
+        }, 1500);
+      };
+    }
+    
+    // Terima pesan dari chatroom
     window.addEventListener('message', (event) => {
       if (event.origin !== 'https://account.soeparnocorp.workers.dev') return;
       
-      if (event.data.type === 'USER_ROOM_CREATED') {
-        console.log(`✅ User room created: user${event.data.userId}`);
-      }
-      
-      if (event.data.type === 'READY_FOR_ROOM') {
-        // Index.html siap, kirim sekarang
-        if (!messageSent) {
-          messageSent = true;
-          iframe.contentWindow.postMessage({
-            type: 'CREATE_USER_ROOM',
-            userId: userId
-          }, 'https://account.soeparnocorp.workers.dev');
-        }
+      if (event.data.type === 'ROOM_CREATED') {
+        console.log('✅ Room created:', event.data.roomName);
       }
     });
   </script>
