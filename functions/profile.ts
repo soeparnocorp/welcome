@@ -7,18 +7,9 @@ export async function onRequest(context) {
 
   // Validasi parameter
   if (!userId || !email) {
-    // Alihkan ke halaman utama atau tampilkan error
     return new Response('Missing parameters', { status: 400 });
   }
 
-  // Simpan sementara di cookie atau langsung render HTML
-  // Opsi 1: Redirect ke versi SPA dengan parameter (jika pakai React Router)
-  // return new Response(null, {
-  //   status: 302,
-  //   headers: { 'Location': `/?userId=${userId}&email=${email}` }
-  // });
-
-  // Opsi 2: Render HTML langsung dari Function (lebih sederhana)
   const html = generateProfilePage(userId, email);
   return new Response(html, {
     headers: { 'Content-Type': 'text/html;charset=UTF-8' }
@@ -26,9 +17,8 @@ export async function onRequest(context) {
 }
 
 function generateProfilePage(userId: string, email: string): string {
-  // Nama pengguna bisa diambil dari email atau KV nantinya
   const username = email.split('@')[0];
-  const lastRoom = ''; // Bisa diambil dari cookie atau localStorage nanti
+  const lastRoom = '';
 
   return `
 <!DOCTYPE html>
@@ -37,23 +27,42 @@ function generateProfilePage(userId: string, email: string): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>READTalk - Buat Room</title>
-  <style>
-    body { margin: 0; font-family: sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 90%; max-width: 400px; text-align: center; }
-    h1 { color: #ff0000; margin-bottom: 10px; }
-    h2 { color: #333; font-weight: 400; margin-bottom: 30px; font-size: 18px; }
-    input { width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #e0e0e0; border-radius: 30px; font-size: 16px; box-sizing: border-box; }
-    button { width: 100%; padding: 15px; background: #ff0000; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; }
-    .last-room { margin-top: 20px; color: #666; font-size: 14px; }
-  </style>
+  <link rel="stylesheet" href="/App.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-  <div class="card">
-    <h1>READTalk</h1>
-    <h2>Buat Room Baru</h2>
-    <input type="text" id="roomName" placeholder="Nama room..." maxlength="14" autofocus>
-    <button id="createBtn">✨ Buat Room</button>
-    <div class="last-room" id="lastRoomInfo"></div>
+  <div class="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md text-center">
+      <h1 class="text-red-600 text-4xl font-bold mb-2">READTalk</h1>
+      <h2 class="text-gray-700 text-lg mb-8">Welcome to READTalk</h2>
+      
+      <input 
+        type="text" 
+        id="roomName" 
+        placeholder="Room Name..." 
+        maxlength="14" 
+        class="w-full px-4 py-3 border-2 border-gray-200 rounded-full text-lg mb-4 focus:border-red-500 focus:outline-none"
+        autofocus
+      >
+      
+      <button 
+        id="createBtn" 
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-full text-lg transition-colors mb-2"
+      >
+        Public Room
+      </button>
+      
+      <div class="text-gray-500 my-4">or</div>
+      
+      <button 
+        id="privateBtn" 
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-full text-lg transition-colors"
+      >
+        Private Room
+      </button>
+      
+      <div id="lastRoomInfo" class="mt-4 text-gray-600"></div>
+    </div>
   </div>
 
   <script>
@@ -63,7 +72,7 @@ function generateProfilePage(userId: string, email: string): string {
     const savedRoom = localStorage.getItem('lastRoom');
 
     if (savedRoom) {
-      document.getElementById('lastRoomInfo').innerHTML = \`Room terakhir: <strong>\${savedRoom}</strong> <button onclick="useLastRoom()">Pakai</button>\`;
+      document.getElementById('lastRoomInfo').innerHTML = \`Room terakhir: <strong>\${savedRoom}</strong> <button onclick="useLastRoom()" class="text-red-600 hover:text-red-800 ml-2">Pakai</button>\`;
     }
 
     document.getElementById('createBtn').onclick = () => {
@@ -71,9 +80,20 @@ function generateProfilePage(userId: string, email: string): string {
       if (!roomName) return;
       
       localStorage.setItem('lastRoom', roomName);
-      
-      // Arahkan ke halaman chat (iframe)
       window.location.href = \`/chat?userId=\${userId}&email=\${email}&room=\${encodeURIComponent(roomName)}\`;
+    };
+
+    document.getElementById('privateBtn').onclick = async () => {
+      try {
+        const response = await fetch('https://account.soeparnocorp.workers.dev/api/room', { 
+          method: 'POST' 
+        });
+        const roomId = await response.text();
+        localStorage.setItem('lastRoom', roomId);
+        window.location.href = \`/chat?userId=\${userId}&email=\${email}&room=\${encodeURIComponent(roomId)}\`;
+      } catch (err) {
+        alert('Gagal membuat private room');
+      }
     };
 
     window.useLastRoom = () => {
