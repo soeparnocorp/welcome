@@ -8,14 +8,14 @@ While this project uses React, Vite supports many popular JS frameworks. [See al
 
 Deploy your own Vite project.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/soeparnocorp/app-readtalk?quickstart=1)
 
-_Live Example: https://vite-react-example.vercel.app_
+_Live Example: https://app-readtalk.pages.dev_
 
 ### Deploying From Your Terminal
 
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
+You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://cloudflare.com/):
 
 ```shell
-$ vercel
+$ cloudflare
 ```
