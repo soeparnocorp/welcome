@@ -8,11 +8,11 @@ function App() {
   const [userData, setUserData] = useState<{userId: string; email: string} | null>(null)
   const [roomName, setRoomName] = useState('')
   const [lastRoom, setLastRoom] = useState('')
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   
   // ==================== DETEK PARAMETER ====================
   useEffect(() => {
-    // Cek parameter di URL (saat balik dari OpenAuth)
     const params = new URLSearchParams(window.location.search)
     const userId = params.get('userId')
     const email = params.get('email')
@@ -20,25 +20,18 @@ function App() {
     if (userId && email) {
       console.log('✅ Detek parameter dari OpenAuth:', { userId, email })
       
-      // Simpan data user
       setUserData({ userId, email })
       localStorage.setItem('userId', userId)
       localStorage.setItem('email', email)
       
-      // Cek apakah ada room tersimpan
       const savedRoom = localStorage.getItem('lastRoom')
       if (savedRoom) {
-        console.log('📁 Ada room tersimpan:', savedRoom)
         setLastRoom(savedRoom)
         setRoomName(savedRoom)
-        setStep('chat') // Langsung ke chat
+        setStep('chat')
       } else {
-        console.log('🏠 Belum ada room, tampilkan form')
-        setStep('room') // Tampilkan form create room
+        setStep('room')
       }
-      
-      // Bersihkan URL dari parameter (opsional)
-      // window.history.replaceState({}, '', '/')
     }
   }, [])
   
@@ -48,7 +41,6 @@ function App() {
       const iframe = iframeRef.current
       
       const handleIframeLoad = () => {
-        console.log('🔄 Iframe loaded, kirim perintah OPEN_ROOM:', roomName)
         iframe.contentWindow?.postMessage({
           type: 'OPEN_ROOM',
           roomName: roomName
@@ -60,32 +52,15 @@ function App() {
     }
   }, [step, roomName])
   
-  // ==================== LISTENER DARI IFRAME ====================
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'https://account.soeparnocorp.workers.dev') return
-      
-      console.log('📨 Pesan dari chatroom:', event.data)
-      
-      if (event.data.type === 'BACK_TO_ROOMS') {
-        setStep('room')
-      }
-      
-      if (event.data.type === 'USER_JOINED') {
-        console.log('👤 User joined:', event.data.username)
-      }
-    }
-    
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [])
-  
   // ==================== HANDLERS ====================
   
   const handleAgree = () => {
-    console.log('👉 User klik Agree, redirect ke OpenAuth')
-    // Redirect ke OpenAuth
-    window.location.href = 'https://openauth.soeparnocorp.workers.dev/'
+    setShowAuthModal(true)
+    // Redirect ke OpenAuth di tab baru
+    window.open('https://openauth.soeparnocorp.workers.dev/', '_blank')
+    
+    // Tutup modal setelah beberapa detik
+    setTimeout(() => setShowAuthModal(false), 3000)
   }
   
   const handleCreateRoom = () => {
@@ -94,22 +69,35 @@ function App() {
       return
     }
     
-    console.log('🏗️ Membuat room:', roomName)
-    
-    // Simpan di localStorage
     localStorage.setItem('lastRoom', roomName)
     setLastRoom(roomName)
-    
-    // Pindah ke chat
     setStep('chat')
   }
   
   // ==================== RENDER ====================
   
-  // WELCOME SCREEN (halaman agree)
+  // WELCOME SCREEN (menggunakan CSS dari App.css)
   if (step === 'welcome') {
     return (
       <>
+        {/* AUTH MODAL (menggunakan CSS dari App.css) */}
+        {showAuthModal && (
+          <div className="auth-overlay">
+            <div className="auth-modal">
+              <div className="auth-modal-header">
+                <h2>OpenAuth</h2>
+                <button className="close-button" onClick={() => setShowAuthModal(false)}>×</button>
+              </div>
+              <div className="auth-modal-content">
+                <div className="loading-spinner"></div>
+                <p>Mengarahkan ke OpenAuth...</p>
+                <p className="hint">Silakan login di tab yang terbuka</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* WELCOME CONTENT */}
         <div>
           <a href="#" target="_blank">
             <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -135,7 +123,7 @@ function App() {
             Agree and continue
           </button>
 
-          <p className="read-the-docs">
+          <p className="read-the-docs footer">
             © 2026 SOEPARNO ENTERPRISE Corp.
           </p>
         </div>
@@ -143,34 +131,77 @@ function App() {
     )
   }
   
-  // ROOM SCREEN (FORM CREATE ROOM - MIRROR)
+  // ROOM SCREEN (FORM CREATE ROOM)
   if (step === 'room') {
     return (
-      <div className="room-screen">
-        <div className="room-card">
-          <h1 className="room-title">READTalk</h1>
-          <h2 className="room-subtitle">Buat Room Baru</h2>
+      <div className="room-screen" style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '20px'
+      }}>
+        <div className="room-card" style={{
+          background: 'white',
+          padding: '40px',
+          borderRadius: '24px',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          width: '100%',
+          maxWidth: '400px',
+          textAlign: 'center'
+        }}>
+          <h1 className="room-title" style={{ color: '#ff0000', fontSize: '32px', marginBottom: '10px' }}>
+            READTalk
+          </h1>
+          <h2 className="room-subtitle" style={{ color: '#333', fontSize: '18px', marginBottom: '30px' }}>
+            Buat Room Baru
+          </h2>
           
           <input
             type="text"
             className="room-input"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            placeholder="Nama room..."
+            placeholder="Room name..."
             maxLength={14}
             autoFocus
+            style={{
+              width: '100%',
+              padding: '15px',
+              marginBottom: '20px',
+              border: '2px solid #e0e0e0',
+              borderRadius: '30px',
+              fontSize: '16px'
+            }}
           />
           
           <button 
             className="room-button"
             onClick={handleCreateRoom}
+            style={{
+              width: '100%',
+              padding: '15px',
+              background: '#ff0000',
+              color: 'white',
+              border: 'none',
+              borderRadius: '30px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
           >
             ✨ Buat Room
           </button>
           
           {lastRoom && (
-            <div className="last-room-container">
-              <p className="last-room-text">
+            <div className="last-room-container" style={{
+              marginTop: '20px',
+              padding: '15px',
+              background: '#f5f5f5',
+              borderRadius: '12px'
+            }}>
+              <p className="last-room-text" style={{ marginBottom: '10px', color: '#666' }}>
                 Room terakhir: <strong>{lastRoom}</strong>
               </p>
               <button 
@@ -179,13 +210,22 @@ function App() {
                   setRoomName(lastRoom)
                   handleCreateRoom()
                 }}
+                style={{
+                  background: 'none',
+                  border: '2px solid #ff0000',
+                  color: '#ff0000',
+                  padding: '8px 20px',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
               >
                 ↻ Pakai lagi
               </button>
             </div>
           )}
           
-          <p className="room-note">
+          <p className="room-note" style={{ marginTop: '20px', color: '#999', fontSize: '12px' }}>
             Setelah room dibuat, silakan isi nama kamu di chat
           </p>
         </div>
@@ -195,19 +235,40 @@ function App() {
   
   // CHAT SCREEN (IFRAME FULLSCREEN)
   return (
-    <div className="chat-screen">
-      {/* IFRAME KE CHATROOM (account.soeparnocorp.workers.dev) */}
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
       <iframe
         ref={iframeRef}
         src={`https://account.soeparnocorp.workers.dev?userId=${userData?.userId}&email=${userData?.email}`}
-        className="chat-iframe"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}
         title="READTalk Chat"
       />
       
-      {/* FLOATING BUTTON KEMBALI KE ROOM FORM */}
       <button 
-        className="chat-back-button"
         onClick={() => setStep('room')}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          left: '20px',
+          padding: '10px 20px',
+          background: '#ff0000',
+          color: 'white',
+          border: 'none',
+          borderRadius: '30px',
+          cursor: 'pointer',
+          zIndex: 1000,
+          fontSize: '14px',
+          fontWeight: '600',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+        }}
       >
         ← Ganti Room
       </button>
